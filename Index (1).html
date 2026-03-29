@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Campus Placement System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    :root {
+      --bg: #0a0e1a;
+      --surface: #111827;
+      --surface2: #1a2235;
+      --border: #1e2d45;
+      --accent: #00d4ff;
+      --accent2: #7c3aed;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --card: #141c2e;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+    /* ---- LOADER ---- */
+    #loader { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity .5s; }
+    .loader-ring { width: 64px; height: 64px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loader-text { margin-top: 16px; font-size: 13px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+
+    /* ---- PAGES ---- */
+    .page { display: none; min-height: 100vh; }
+    .page.active { display: flex; }
+
+    /* ---- LANDING ---- */
+    #landing { flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    .bg-grid { position: absolute; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 60px 60px; opacity: .3; }
+    .bg-glow { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(0,212,255,.08) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; }
+    .landing-content { position: relative; z-index: 1; text-align: center; padding: 2rem; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,212,255,.1); border: 1px solid rgba(0,212,255,.3); color: var(--accent); padding: 6px 16px; border-radius: 100px; font-size: 12px; font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; margin-bottom: 2rem; }
+    .badge-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse-dot 2s infinite; }
+    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.5)} }
+    h1.hero { font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; }
+    h1.hero span.grad { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-sub { font-size: 1.1rem; color: var(--muted); max-width: 520px; margin: 0 auto 3rem; line-height: 1.7; }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 4rem; }
+    .btn { padding: 14px 32px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; font-family: 'Sora', sans-serif; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary { background: var(--accent); color: #000; }
+    .btn-primary:hover { background: #00b8d9; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,212,255,.3); }
+    .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+    .btn-outline { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+    .btn-outline:hover { background: rgba(0,212,255,.1); transform: translateY(-2px); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover { background: #dc2626; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-success:hover { background: #059669; }
+    .btn-sm { padding: 8px 18px; font-size: 13px; }
+    .btn-xs { padding: 5px 12px; font-size: 12px; border-radius: 6px; }
+    .stats-row { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; }
+    .stat-item { text-align: center; }
+    .stat-num { font-size: 2rem; font-weight: 800; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+    .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ---- AUTH MODAL ---- */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 460px; position: relative; animation: modalIn .3s ease; max-height: 90vh; overflow-y: auto; }
+    @keyframes modalIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: var(--surface2); border: none; color: var(--muted); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+    .modal-close:hover { color: var(--text); }
+    .modal h2 { font-size: 1.6rem; font-weight: 700; margin-bottom: .5rem; }
+    .modal p.sub { color: var(--muted); font-size: 14px; margin-bottom: 2rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+      padding: 11px 14px; border-radius: 10px; font-size: 14px; font-family: 'Sora', sans-serif;
+      transition: border-color .2s; outline: none;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,212,255,.1); }
+    .form-group select option { background: var(--surface2); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-full { grid-column: 1/-1; }
+    .tab-group { display: flex; gap: 2px; background: var(--surface2); border-radius: 10px; padding: 4px; margin-bottom: 2rem; }
+    .tab-btn { flex: 1; padding: 9px; border: none; background: transparent; color: var(--muted); border-radius: 8px; cursor: pointer; font-size: 14px; font-family: 'Sora', sans-serif; font-weight: 500; transition: all .2s; }
+    .tab-btn.active { background: var(--accent); color: #000; }
+    .alert { padding: 12px 16px; border-radius: 10px; font-size: 13px; margin-bottom: 1rem; display: none; }
+    .alert.show { display: block; }
+    .alert-success { background: rgba(16,185,129,.15); border: 1px solid rgba(16,185,129,.3); color: #34d399; }
+    .alert-error { background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.3); color: #f87171; }
+
+    /* ---- MAIN APP ---- */
+    #app { flex-direction: row; }
+    .sidebar { width: 260px; min-height: 100vh; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-logo { padding: 2rem 1.5rem 1.5rem; border-bottom: 1px solid var(--border); }
+    .sidebar-logo .logo-text { font-size: 1.1rem; font-weight: 700; }
+    .logo-sub { font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+    .sidebar-user { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); }
+    .user-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: #000; }
+    .user-info { display: flex; align-items: center; gap: 12px; }
+    .user-name { font-size: 14px; font-weight: 600; }
+    .user-role { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .sidebar-nav { flex: 1; padding: 1rem 0; }
+    .nav-section { padding: 0 1rem .5rem; }
+    .nav-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; padding: 0 .5rem; margin-bottom: .5rem; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; cursor: pointer; transition: all .2s; font-size: 14px; font-weight: 500; color: var(--muted); margin-bottom: 2px; }
+    .nav-item:hover { background: var(--surface2); color: var(--text); }
+    .nav-item.active { background: rgba(0,212,255,.1); color: var(--accent); }
+    .nav-item i { width: 18px; text-align: center; }
+    .sidebar-footer { padding: 1.5rem; border-top: 1px solid var(--border); }
+    .main-content { flex: 1; padding: 2rem; overflow-y: auto; max-height: 100vh; }
+    .content-section { display: none; }
+    .content-section.active { display: block; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: gap; gap: 1rem; }
+    .section-title { font-size: 1.6rem; font-weight: 700; }
+    .section-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
+
+    /* ---- CARDS & GRID ---- */
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; transition: all .2s; }
+    .card:hover { border-color: rgba(0,212,255,.3); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+    .company-badge { background: var(--surface2); border: 1px solid var(--border); padding: 4px 10px; border-radius: 100px; font-size: 11px; color: var(--muted); }
+    .job-title { font-size: 1.1rem; font-weight: 700; margin-bottom: .4rem; }
+    .job-company { color: var(--accent); font-size: 13px; font-weight: 600; margin-bottom: 1rem; }
+    .job-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1rem; }
+    .tag { padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 500; }
+    .tag-cyan { background: rgba(0,212,255,.1); color: var(--accent); }
+    .tag-purple { background: rgba(124,58,237,.15); color: #a78bfa; }
+    .tag-green { background: rgba(16,185,129,.1); color: var(--success); }
+    .tag-orange { background: rgba(245,158,11,.1); color: var(--warning); }
+    .tag-red { background: rgba(239,68,68,.1); color: var(--danger); }
+    .job-meta { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-bottom: 1.2rem; }
+    .meta-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+    .meta-item i { color: var(--accent); width: 14px; }
+    .deadline-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; padding: 6px 12px; border-radius: 8px; margin-bottom: 1rem; }
+    .deadline-ok { background: rgba(16,185,129,.1); color: var(--success); }
+    .deadline-soon { background: rgba(245,158,11,.1); color: var(--warning); }
+    .deadline-passed { background: rgba(239,68,68,.1); color: var(--danger); }
+    .card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    /* ---- STAT CARDS ---- */
+    .stat-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.2rem; }
+    .stat-card-num { font-size: 2rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+    .stat-card-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .stat-card-icon { font-size: 1.5rem; margin-bottom: .5rem; }
+
+    /* ---- TABLE ---- */
+    .table-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--border); border-radius: 14px; }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { border-bottom: 1px solid var(--border); }
+    th { padding: 14px 16px; text-align: left; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; white-space: nowrap; }
+    td { padding: 14px 16px; font-size: 13px; border-bottom: 1px solid rgba(30,45,69,.5); white-space: nowrap; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--surface2); }
+
+    /* ---- STATUS PILLS ---- */
+    .status { padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; }
+    .status-applied { background: rgba(0,212,255,.1); color: var(--accent); }
+    .status-shortlisted { background: rgba(245,158,11,.15); color: var(--warning); }
+    .status-selected { background: rgba(16,185,129,.15); color: var(--success); }
+    .status-rejected { background: rgba(239,68,68,.1); color: var(--danger); }
+    .status-active { background: rgba(16,185,129,.1); color: var(--success); }
+    .status-closed { background: rgba(100,116,139,.1); color: var(--muted); }
+
+    /* ---- SEARCH BAR ---- */
+    .search-bar { position: relative; }
+    .search-bar input { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 11px 14px 11px 42px; border-radius: 10px; font-size: 14px; font-family: 'Sora',sans-serif; outline: none; width: 280px; }
+    .search-bar input:focus { border-color: var(--accent); }
+    .search-bar i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+    .filter-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 1.5rem; }
+    .filter-select { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px 14px; border-radius: 10px; font-size: 13px; font-family: 'Sora',sans-serif; outline: none; cursor: pointer; }
+    .filter-select:focus { border-color: var(--accent); }
+
+    /* ---- PROFILE ---- */
+    .profile-header { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap; }
+    .profile-avatar { width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: #000; flex-shrink: 0; }
+    .profile-info h2 { font-size: 1.4rem; font-weight: 700; }
+    .profile-info p { color: var(--muted); font-size: 14px; margin-top: 4px; }
+    .profile-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: .8rem; }
+    .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .profile-section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; }
+    .profile-section h3 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--accent); }
+    .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(30,45,69,.5); font-size: 14px; }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: var(--muted); }
+
+    /* ---- ELIGIBILITY INDICATOR ---- */
+    .elig-check { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-bottom: 1rem; }
+    .elig-pass { border-color: rgba(16,185,129,.4); background: rgba(16,185,129,.05); }
+    .elig-fail { border-color: rgba(239,68,68,.4); background: rgba(239,68,68,.05); }
+    .elig-header { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+    .elig-reasons { margin-top: 8px; font-size: 12px; color: var(--muted); }
+    .elig-reasons li { margin-top: 4px; color: #f87171; }
+
+    /* ---- EMPTY STATE ---- */
+    .empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); }
+    .empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: .4; }
+    .empty-state p { font-size: 15px; }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main-content { padding: 1rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .stat-cards { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite; vertical-align: middle; margin-right: 6px; }
+    .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; }
+    .loading-overlay.show { display: flex; }
+    .loading-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem 3rem; text-align: center; }
+  </style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-ring"></div>
+  <div class="loader-text">Campus Placement System</div>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-box">
+    <div class="loader-ring" style="margin:0 auto 12px"></div>
+    <div style="font-size:14px;color:var(--muted)">Processing...</div>
+  </div>
+</div>
+
+<!-- LANDING PAGE -->
+<div id="landing" class="page active">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div class="landing-content">
+    <div class="badge"><span class="badge-dot"></span> Campus Recruitment Platform</div>
+    <h1 class="hero">Your Career<br><span class="grad">Starts Here</span></h1>
+    <p class="hero-sub">A unified platform connecting students with top companies. Apply smart, track progress, land your dream job.</p>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="openModal('studentLoginModal')"><i class="fas fa-user-graduate"></i> Student Login</button>
+      <button class="btn btn-secondary" onclick="openModal('studentRegisterModal')"><i class="fas fa-user-plus"></i> Register Now</button>
+      <button class="btn btn-outline" onclick="openModal('adminLoginModal')"><i class="fas fa-shield-alt"></i> Admin</button>
+    </div>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-num" id="landingStat1">—</div><div class="stat-label">Students</div></div>
+      <div class="stat-item"><div class="stat-num" id="landingStat2">—</div><div class="stat-label">Companies</div></div>
+      <div class="stat-item"><div class="stat-num" id="landingStat3">—</div><div class="stat-label">Active Jobs</div></div>
+      <div class="stat-item"><div class="stat-num" id="landingStat4">—</div><div class="stat-label">Placed</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT LOGIN MODAL -->
+<div class="modal-overlay" id="studentLoginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('studentLoginModal')"><i class="fas fa-times"></i></button>
+    <h2>Welcome Back</h2>
+    <p class="sub">Login to your student portal</p>
+    <div class="alert alert-error" id="loginErr"></div>
+    <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="your@email.com"/></div>
+    <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••"/></div>
+    <button class="btn btn-primary" style="width:100%" onclick="studentLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
+    <p style="text-align:center;margin-top:1rem;font-size:13px;color:var(--muted)">New here? <a href="#" onclick="closeModal('studentLoginModal');openModal('studentRegisterModal')" style="color:var(--accent)">Register</a></p>
+  </div>
+</div>
+
+<!-- STUDENT REGISTER MODAL -->
+<div class="modal-overlay" id="studentRegisterModal">
+  <div class="modal" style="max-width:560px">
+    <button class="modal-close" onclick="closeModal('studentRegisterModal')"><i class="fas fa-times"></i></button>
+    <h2>Create Account</h2>
+    <p class="sub">Fill your details to register</p>
+    <div class="alert alert-error" id="regErr"></div>
+    <div class="alert alert-success" id="regSuccess"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Full Name *</label><input type="text" id="regName" placeholder="John Doe"/></div>
+      <div class="form-group"><label>Email *</label><input type="email" id="regEmail" placeholder="john@email.com"/></div>
+      <div class="form-group"><label>Phone *</label><input type="tel" id="regPhone" placeholder="9876543210"/></div>
+      <div class="form-group"><label>Branch *</label>
+        <select id="regBranch">
+          <option value="">Select Branch</option>
+          <option>CSE</option><option>IT</option><option>ECE</option><option>EEE</option>
+          <option>MECH</option><option>CIVIL</option><option>CHEM</option><option>MBA</option><option>MCA</option>
+        </select>
+      </div>
+      <div class="form-group"><label>CGPA *</label><input type="number" id="regCGPA" step="0.1" min="0" max="10" placeholder="8.5"/></div>
+      <div class="form-group"><label>Active Backlogs</label><input type="number" id="regBacklogs" placeholder="0" value="0"/></div>
+      <div class="form-group"><label>Passing Year *</label><input type="number" id="regYear" placeholder="2025"/></div>
+      <div class="form-group"><label>Password *</label><input type="password" id="regPass" placeholder="Min 6 chars"/></div>
+      <div class="form-group form-full"><label>Skills (comma separated)</label><input type="text" id="regSkills" placeholder="Java, Python, React, SQL"/></div>
+      <div class="form-group form-full"><label>Resume Drive Link</label><input type="url" id="regResume" placeholder="https://drive.google.com/..."/></div>
+    </div>
+    <button class="btn btn-primary" style="width:100%" onclick="registerStudent()"><i class="fas fa-user-plus"></i> Register</button>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="modal-overlay" id="adminLoginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('adminLoginModal')"><i class="fas fa-times"></i></button>
+    <h2><i class="fas fa-shield-alt" style="color:var(--accent2)"></i> Admin Login</h2>
+    <p class="sub">Access the admin control panel</p>
+    <div class="alert alert-error" id="adminLoginErr"></div>
+    <div class="form-group"><label>Email</label><input type="email" id="adminEmail" placeholder="admin@college.edu"/></div>
+    <div class="form-group"><label>Password</label><input type="password" id="adminPass" placeholder="••••••••"/></div>
+    <button class="btn btn-primary" style="width:100%;background:var(--accent2)" onclick="adminLogin()"><i class="fas fa-sign-in-alt"></i> Login as Admin</button>
+  </div>
+</div>
+
+<!-- ADD JOB MODAL -->
+<div class="modal-overlay" id="addJobModal">
+  <div class="modal" style="max-width:580px">
+    <button class="modal-close" onclick="closeModal('addJobModal')"><i class="fas fa-times"></i></button>
+    <h2>Post New Job</h2>
+    <p class="sub">Add a new job opening</p>
+    <div class="alert alert-success" id="jobSuccess"></div>
+    <div class="alert alert-error" id="jobErr"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Job Title *</label><input type="text" id="jobTitle" placeholder="Software Engineer"/></div>
+      <div class="form-group"><label>Company *</label>
+        <select id="jobCompany"><option value="">Select Company</option></select>
+      </div>
+      <div class="form-group"><label>Location *</label><input type="text" id="jobLocation" placeholder="Bangalore"/></div>
+      <div class="form-group"><label>Package (LPA) *</label><input type="text" id="jobPackage" placeholder="12 LPA"/></div>
+      <div class="form-group"><label>Job Type *</label>
+        <select id="jobType"><option>Full-Time</option><option>Internship</option><option>Part-Time</option></select>
+      </div>
+      <div class="form-group"><label>Deadline *</label><input type="date" id="jobDeadline"/></div>
+      <div class="form-group"><label>Min CGPA *</label><input type="number" id="jobMinCGPA" step="0.1" placeholder="6.0"/></div>
+      <div class="form-group"><label>Max Backlogs *</label><input type="number" id="jobMaxBacklogs" placeholder="0"/></div>
+      <div class="form-group form-full"><label>Allowed Branches (comma separated, empty = all)</label><input type="text" id="jobBranches" placeholder="CSE, IT, ECE"/></div>
+      <div class="form-group form-full"><label>Job Description *</label><textarea id="jobDesc" rows="3" placeholder="Describe the role..."></textarea></div>
+    </div>
+    <button class="btn btn-primary" style="width:100%" onclick="addJob()"><i class="fas fa-plus"></i> Post Job</button>
+  </div>
+</div>
+
+<!-- ADD COMPANY MODAL -->
+<div class="modal-overlay" id="addCompanyModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('addCompanyModal')"><i class="fas fa-times"></i></button>
+    <h2>Add Company</h2>
+    <div class="alert alert-success" id="companySuccess"></div>
+    <div class="form-group"><label>Company Name *</label><input type="text" id="compName" placeholder="Google"/></div>
+    <div class="form-group"><label>Industry</label><input type="text" id="compIndustry" placeholder="Technology"/></div>
+    <div class="form-group"><label>Website</label><input type="url" id="compWebsite" placeholder="https://google.com"/></div>
+    <div class="form-group"><label>Description</label><textarea id="compDesc" rows="3" placeholder="About the company..."></textarea></div>
+    <button class="btn btn-primary" style="width:100%" onclick="addCompany()"><i class="fas fa-plus"></i> Add Company</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="page">
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-text">🎓 PlaceTrack</div>
+      <div class="logo-sub">Campus Placement Portal</div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <div>
+          <div class="user-name" id="userName">Loading...</div>
+          <div class="user-role" id="userRole">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-nav" id="sidebarNav">
+      <!-- Filled by JS -->
+    </div>
+    <div class="sidebar-footer">
+      <button class="btn btn-secondary" style="width:100%" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- STUDENT: Dashboard -->
+    <div class="content-section" id="sec-dashboard">
+      <div class="section-header">
+        <div><div class="section-title">Dashboard</div><div class="section-sub">Your placement overview</div></div>
+      </div>
+      <div class="stat-cards" id="studentStats"></div>
+      <h3 style="margin-bottom:1rem;font-size:1rem;color:var(--muted)">RECENT APPLICATIONS</h3>
+      <div class="table-wrap"><table><thead><tr><th>Job</th><th>Company</th><th>Applied On</th><th>Status</th></tr></thead><tbody id="recentAppsTable"></tbody></table></div>
+    </div>
+
+    <!-- STUDENT: Browse Jobs -->
+    <div class="content-section" id="sec-jobs">
+      <div class="section-header">
+        <div><div class="section-title">Browse Jobs</div><div class="section-sub">Find your perfect opportunity</div></div>
+      </div>
+      <div class="filter-row">
+        <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="Search jobs..." oninput="filterJobs()" id="jobSearch"/></div>
+        <select class="filter-select" id="filterBranch" onchange="filterJobs()"><option value="">All Branches</option><option>CSE</option><option>IT</option><option>ECE</option><option>EEE</option><option>MECH</option><option>CIVIL</option></select>
+        <select class="filter-select" id="filterType" onchange="filterJobs()"><option value="">All Types</option><option>Full-Time</option><option>Internship</option><option>Part-Time</option></select>
+        <select class="filter-select" id="filterElig" onchange="filterJobs()"><option value="">All Jobs</option><option value="eligible">Eligible Only</option></select>
+      </div>
+      <div class="cards-grid" id="jobsGrid"></div>
+    </div>
+
+    <!-- STUDENT: My Applications -->
+    <div class="content-section" id="sec-myapps">
+      <div class="section-header">
+        <div><div class="section-title">My Applications</div><div class="section-sub">Track your application history</div></div>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Job Title</th><th>Company</th><th>Applied On</th><th>Status</th><th>Remarks</th></tr></thead>
+        <tbody id="myAppsTable"></tbody></table>
+      </div>
+    </div>
+
+    <!-- STUDENT: Profile -->
+    <div class="content-section" id="sec-profile">
+      <div class="section-header">
+        <div><div class="section-title">My Profile</div><div class="section-sub">View and update your info</div></div>
+        <button class="btn btn-primary btn-sm" onclick="toggleEditProfile()"><i class="fas fa-edit"></i> Edit Profile</button>
+      </div>
+      <div id="profileView"></div>
+      <div id="profileEdit" style="display:none">
+        <div class="card">
+          <h3 style="margin-bottom:1.5rem">Edit Profile</h3>
+          <div class="form-row">
+            <div class="form-group"><label>Phone</label><input type="tel" id="editPhone"/></div>
+            <div class="form-group"><label>CGPA</label><input type="number" id="editCGPA" step="0.1"/></div>
+            <div class="form-group"><label>Backlogs</label><input type="number" id="editBacklogs"/></div>
+            <div class="form-group form-full"><label>Skills</label><input type="text" id="editSkills"/></div>
+            <div class="form-group form-full"><label>Resume Drive Link</label><input type="url" id="editResume"/></div>
+          </div>
+          <div class="alert alert-success" id="profileSuccess"></div>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-primary" onclick="saveProfile()"><i class="fas fa-save"></i> Save Changes</button>
+            <button class="btn btn-secondary" onclick="toggleEditProfile()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN: Dashboard -->
+    <div class="content-section" id="sec-adminDash">
+      <div class="section-header">
+        <div><div class="section-title">Admin Dashboard</div><div class="section-sub">Campus placement overview</div></div>
+      </div>
+      <div class="stat-cards" id="adminStats"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem" id="adminChartsRow">
+        <div class="card"><h3 style="font-size:1rem;margin-bottom:1rem;color:var(--accent)">Recent Applications</h3><div id="adminRecentApps"></div></div>
+        <div class="card"><h3 style="font-size:1rem;margin-bottom:1rem;color:var(--accent)">Application Status</h3><div id="adminStatusBreakdown"></div></div>
+      </div>
+    </div>
+
+    <!-- ADMIN: Students -->
+    <div class="content-section" id="sec-adminStudents">
+      <div class="section-header">
+        <div><div class="section-title">Students</div><div class="section-sub">Manage registered students</div></div>
+      </div>
+      <div class="filter-row"><div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="Search students..." oninput="filterStudents()" id="studentSearch"/></div></div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Name</th><th>Email</th><th>Branch</th><th>CGPA</th><th>Backlogs</th><th>Year</th><th>Resume</th></tr></thead>
+        <tbody id="studentsTable"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ADMIN: Companies -->
+    <div class="content-section" id="sec-adminCompanies">
+      <div class="section-header">
+        <div><div class="section-title">Companies</div></div>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addCompanyModal')"><i class="fas fa-plus"></i> Add Company</button>
+      </div>
+      <div class="cards-grid" id="companiesGrid"></div>
+    </div>
+
+    <!-- ADMIN: Jobs -->
+    <div class="content-section" id="sec-adminJobs">
+      <div class="section-header">
+        <div><div class="section-title">Manage Jobs</div></div>
+        <button class="btn btn-primary btn-sm" onclick="openAddJobModal()"><i class="fas fa-plus"></i> Post Job</button>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Title</th><th>Company</th><th>Package</th><th>Type</th><th>Deadline</th><th>Status</th><th>Apps</th><th>Actions</th></tr></thead>
+        <tbody id="adminJobsTable"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ADMIN: Applications -->
+    <div class="content-section" id="sec-adminApps">
+      <div class="section-header">
+        <div><div class="section-title">All Applications</div></div>
+      </div>
+      <div class="filter-row">
+        <select class="filter-select" id="filterAppStatus" onchange="filterAdminApps()"><option value="">All Status</option><option>Applied</option><option>Shortlisted</option><option>Selected</option><option>Rejected</option></select>
+        <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="Search..." oninput="filterAdminApps()" id="appSearch"/></div>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Student</th><th>Job</th><th>Company</th><th>Applied On</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="adminAppsTable"></tbody></table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+let currentUser = null;
+let currentRole = null; // 'student' | 'admin'
+let allJobs = [];
+let allStudents = [];
+let allApplications = [];
+let allCompanies = [];
+let eligibilityCache = {};
+
+// ============================================================
+// LOADER
+// ============================================================
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').style.opacity = '0';
+    setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
+    loadLandingStats();
+  }, 1200);
+});
+
+// ============================================================
+// GOOGLE APPS SCRIPT BRIDGE
+// ============================================================
+function gCall(fn, ...args) {
+  return new Promise((resolve, reject) => {
+    google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[fn](...args);
+  });
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function showLoader() { document.getElementById('loadingOverlay').classList.add('show'); }
+function hideLoader() { document.getElementById('loadingOverlay').classList.remove('show'); }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function showAlert(id, msg, type='error') {
+  const el = document.getElementById(id);
+  el.className = `alert alert-${type} show`;
+  el.textContent = msg;
+  if (type === 'success') setTimeout(() => el.classList.remove('show'), 4000);
+}
+function formatDate(d) { if (!d) return '—'; const dt = new Date(d); return dt.toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'}); }
+function daysLeft(deadline) {
+  const diff = new Date(deadline) - new Date();
+  const d = Math.ceil(diff / 86400000);
+  return d;
+}
+function deadlineBadge(deadline) {
+  const d = daysLeft(deadline);
+  if (d < 0) return `<span class="deadline-badge deadline-passed"><i class="fas fa-clock"></i> Deadline passed</span>`;
+  if (d <= 3) return `<span class="deadline-badge deadline-soon"><i class="fas fa-exclamation-triangle"></i> ${d} days left</span>`;
+  return `<span class="deadline-badge deadline-ok"><i class="fas fa-calendar-check"></i> ${d} days left</span>`;
+}
+function statusPill(s) {
+  const cls = { Applied:'applied', Shortlisted:'shortlisted', Selected:'selected', Rejected:'rejected', Active:'active', Closed:'closed' };
+  return `<span class="status status-${cls[s]||'applied'}">${s}</span>`;
+}
+function navigate(sec) {
+  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('sec-' + sec)?.classList.add('active');
+  document.querySelector(`[data-sec="${sec}"]`)?.classList.add('active');
+  loadSection(sec);
+}
+
+// ============================================================
+// LANDING STATS
+// ============================================================
+async function loadLandingStats() {
+  try {
+    const stats = await gCall('getDashboardStats');
+    document.getElementById('landingStat1').textContent = stats.totalStudents;
+    document.getElementById('landingStat2').textContent = stats.totalCompanies;
+    document.getElementById('landingStat3').textContent = stats.activeJobs;
+    document.getElementById('landingStat4').textContent = stats.placedStudents;
+  } catch(e) {}
+}
+
+// ============================================================
+// AUTH
+// ============================================================
+async function studentLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  if (!email || !pass) return showAlert('loginErr', 'Please fill all fields.');
+  showLoader();
+  try {
+    const res = await gCall('studentLogin', email, pass);
+    hideLoader();
+    if (res.success) {
+      currentUser = res.student;
+      currentRole = 'student';
+      closeModal('studentLoginModal');
+      initStudentApp();
+    } else showAlert('loginErr', res.message);
+  } catch(e) { hideLoader(); showAlert('loginErr', 'Error: ' + e.message); }
+}
+
+async function registerStudent() {
+  const data = {
+    name: document.getElementById('regName').value.trim(),
+    email: document.getElementById('regEmail').value.trim(),
+    phone: document.getElementById('regPhone').value.trim(),
+    branch: document.getElementById('regBranch').value,
+    cgpa: document.getElementById('regCGPA').value,
+    backlogs: document.getElementById('regBacklogs').value || '0',
+    passingYear: document.getElementById('regYear').value,
+    password: document.getElementById('regPass').value,
+    skills: document.getElementById('regSkills').value.trim(),
+    resumeURL: document.getElementById('regResume').value.trim()
+  };
+  if (!data.name||!data.email||!data.branch||!data.cgpa||!data.passingYear||!data.password)
+    return showAlert('regErr', 'Please fill all required fields.');
+  if (data.password.length < 6) return showAlert('regErr', 'Password must be at least 6 characters.');
+  showLoader();
+  try {
+    const res = await gCall('registerStudent', data);
+    hideLoader();
+    if (res.success) showAlert('regSuccess', 'Registration successful! You can now login.', 'success');
+    else showAlert('regErr', res.message);
+  } catch(e) { hideLoader(); showAlert('regErr', e.message); }
+}
+
+async function adminLogin() {
+  const email = document.getElementById('adminEmail').value.trim();
+  const pass = document.getElementById('adminPass').value;
+  if (!email || !pass) return showAlert('adminLoginErr', 'Please fill all fields.');
+  showLoader();
+  try {
+    const res = await gCall('adminLogin', email, pass);
+    hideLoader();
+    if (res.success) {
+      currentUser = res.admin;
+      currentRole = 'admin';
+      closeModal('adminLoginModal');
+      initAdminApp();
+    } else showAlert('adminLoginErr', res.message);
+  } catch(e) { hideLoader(); showAlert('adminLoginErr', e.message); }
+}
+
+function logout() {
+  currentUser = null; currentRole = null;
+  allJobs = []; allStudents = []; allApplications = []; allCompanies = [];
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('landing').classList.add('active');
+  loadLandingStats();
+}
+
+// ============================================================
+// INIT APPS
+// ============================================================
+function initStudentApp() {
+  document.getElementById('landing').classList.remove('active');
+  document.getElementById('app').classList.add('active');
+  document.getElementById('userName').textContent = currentUser.Name;
+  document.getElementById('userRole').textContent = 'Student · ' + currentUser.Branch;
+  document.getElementById('userAvatar').textContent = currentUser.Name[0].toUpperCase();
+  document.getElementById('sidebarNav').innerHTML = `
+    <div class="nav-section">
+      <div class="nav-label">Main</div>
+      <div class="nav-item active" data-sec="dashboard" onclick="navigate('dashboard')"><i class="fas fa-home"></i> Dashboard</div>
+      <div class="nav-item" data-sec="jobs" onclick="navigate('jobs')"><i class="fas fa-briefcase"></i> Browse Jobs</div>
+      <div class="nav-item" data-sec="myapps" onclick="navigate('myapps')"><i class="fas fa-file-alt"></i> My Applications</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Account</div>
+      <div class="nav-item" data-sec="profile" onclick="navigate('profile')"><i class="fas fa-user-circle"></i> My Profile</div>
+    </div>`;
+  navigate('dashboard');
+}
+
+function initAdminApp() {
+  document.getElementById('landing').classList.remove('active');
+  document.getElementById('app').classList.add('active');
+  document.getElementById('userName').textContent = currentUser.Name;
+  document.getElementById('userRole').textContent = 'Administrator';
+  document.getElementById('userAvatar').textContent = '🛡';
+  document.getElementById('sidebarNav').innerHTML = `
+    <div class="nav-section">
+      <div class="nav-label">Overview</div>
+      <div class="nav-item active" data-sec="adminDash" onclick="navigate('adminDash')"><i class="fas fa-chart-line"></i> Dashboard</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Manage</div>
+      <div class="nav-item" data-sec="adminStudents" onclick="navigate('adminStudents')"><i class="fas fa-user-graduate"></i> Students</div>
+      <div class="nav-item" data-sec="adminCompanies" onclick="navigate('adminCompanies')"><i class="fas fa-building"></i> Companies</div>
+      <div class="nav-item" data-sec="adminJobs" onclick="navigate('adminJobs')"><i class="fas fa-briefcase"></i> Jobs</div>
+      <div class="nav-item" data-sec="adminApps" onclick="navigate('adminApps')"><i class="fas fa-file-alt"></i> Applications</div>
+    </div>`;
+  navigate('adminDash');
+}
+
+// ============================================================
+// SECTION LOADERS
+// ============================================================
+async function loadSection(sec) {
+  switch(sec) {
+    case 'dashboard': await loadStudentDashboard(); break;
+    case 'jobs': await loadJobs(); break;
+    case 'myapps': await loadMyApps(); break;
+    case 'profile': loadProfile(); break;
+    case 'adminDash': await loadAdminDashboard(); break;
+    case 'adminStudents': await loadAdminStudents(); break;
+    case 'adminCompanies': await loadAdminCompanies(); break;
+    case 'adminJobs': await loadAdminJobs(); break;
+    case 'adminApps': await loadAdminApps(); break;
+  }
+}
+
+// ---- STUDENT DASHBOARD ----
+async function loadStudentDashboard() {
+  const apps = await gCall('getStudentApplications', currentUser.StudentID);
+  allApplications = apps;
+  const placed = apps.filter(a=>a.Status==='Selected').length;
+  const shortlisted = apps.filter(a=>a.Status==='Shortlisted').length;
+  document.getElementById('studentStats').innerHTML = `
+    <div class="stat-card"><div class="stat-card-icon">📋</div><div class="stat-card-num" style="color:var(--accent)">${apps.length}</div><div class="stat-card-label">Total Applications</div></div>
+    <div class="stat-card"><div class="stat-card-icon">⭐</div><div class="stat-card-num" style="color:var(--warning)">${shortlisted}</div><div class="stat-card-label">Shortlisted</div></div>
+    <div class="stat-card"><div class="stat-card-icon">🎉</div><div class="stat-card-num" style="color:var(--success)">${placed}</div><div class="stat-card-label">Selected</div></div>
+    <div class="stat-card"><div class="stat-card-icon">📊</div><div class="stat-card-num">${currentUser.CGPA}</div><div class="stat-card-label">My CGPA</div></div>`;
+  const recent = apps.slice(-5).reverse();
+  const tbody = document.getElementById('recentAppsTable');
+  tbody.innerHTML = recent.length ? recent.map(a=>`<tr>
+    <td><strong>${a.JobTitle}</strong></td><td>${a.CompanyName}</td>
+    <td>${formatDate(a.AppliedAt)}</td><td>${statusPill(a.Status)}</td></tr>`).join('') :
+    `<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:2rem">No applications yet. <a href="#" onclick="navigate('jobs')" style="color:var(--accent)">Browse jobs →</a></td></tr>`;
+}
+
+// ---- BROWSE JOBS ----
+async function loadJobs() {
+  allJobs = await gCall('getActiveJobs');
+  eligibilityCache = {};
+  // Pre-check eligibility
+  await Promise.all(allJobs.map(async j => {
+    const r = await gCall('checkEligibility', currentUser.StudentID, j.JobID);
+    eligibilityCache[j.JobID] = r;
+  }));
+  renderJobs(allJobs);
+}
+
+function renderJobs(jobs) {
+  const grid = document.getElementById('jobsGrid');
+  if (!jobs.length) { grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-briefcase-medical"></i><p>No jobs found matching your filters.</p></div>`; return; }
+  grid.innerHTML = jobs.map(j => {
+    const elig = eligibilityCache[j.JobID] || { eligible: false, reasons: ['Loading...'] };
+    const applied = allApplications.find(a => a.JobID === j.JobID);
+    return `<div class="card">
+      <div class="card-header"><span class="company-badge">${j.CompanyName}</span><span class="tag tag-${j.JobType==='Full-Time'?'green':j.JobType==='Internship'?'cyan':'orange'}">${j.JobType}</span></div>
+      <div class="job-title">${j.Title}</div>
+      <div class="job-company"><i class="fas fa-building"></i> ${j.CompanyName}</div>
+      <div class="job-tags">
+        <span class="tag tag-green"><i class="fas fa-rupee-sign"></i> ${j.Package}</span>
+        <span class="tag tag-cyan"><i class="fas fa-map-marker-alt"></i> ${j.Location}</span>
+        <span class="tag tag-purple">CGPA ≥ ${j.MinCGPA}</span>
+      </div>
+      ${deadlineBadge(j.Deadline)}
+      <div class="elig-check ${elig.eligible?'elig-pass':'elig-fail'}">
+        <div class="elig-header"><i class="fas fa-${elig.eligible?'check-circle':'times-circle'}" style="color:${elig.eligible?'var(--success)':'var(--danger)'}"></i>${elig.eligible?'You are eligible':'Not eligible'}</div>
+        ${!elig.eligible?`<ul class="elig-reasons">${elig.reasons.map(r=>`<li>${r}</li>`).join('')}</ul>`:''}
+      </div>
+      <div class="card-actions">
+        ${applied?`<button class="btn btn-sm" style="background:var(--surface2);color:var(--muted);cursor:default"><i class="fas fa-check"></i> Applied</button>`
+        :elig.eligible?`<button class="btn btn-primary btn-sm" onclick="applyJob('${j.JobID}')"><i class="fas fa-paper-plane"></i> Apply Now</button>`
+        :`<button class="btn btn-sm btn-secondary" disabled style="opacity:.5;cursor:not-allowed">Not Eligible</button>`}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterJobs() {
+  const q = document.getElementById('jobSearch').value.toLowerCase();
+  const branch = document.getElementById('filterBranch').value;
+  const type = document.getElementById('filterType').value;
+  const eligOnly = document.getElementById('filterElig').value === 'eligible';
+  let filtered = allJobs.filter(j => {
+    const matchQ = !q || j.Title.toLowerCase().includes(q) || j.CompanyName.toLowerCase().includes(q) || j.Location.toLowerCase().includes(q);
+    const matchType = !type || j.JobType === type;
+    const branches = j.AllowedBranches ? j.AllowedBranches.split(',').map(b=>b.trim()) : [];
+    const matchBranch = !branch || !branches.length || branches.includes(branch);
+    const matchElig = !eligOnly || eligibilityCache[j.JobID]?.eligible;
+    return matchQ && matchType && matchBranch && matchElig;
+  });
+  renderJobs(filtered);
+}
+
+async function applyJob(jobId) {
+  showLoader();
+  try {
+    const res = await gCall('applyForJob', currentUser.StudentID, jobId);
+    hideLoader();
+    if (res.success) {
+      allApplications = await gCall('getStudentApplications', currentUser.StudentID);
+      renderJobs(allJobs);
+      alert('✅ ' + res.message);
+    } else alert('❌ ' + res.message);
+  } catch(e) { hideLoader(); alert('Error: ' + e.message); }
+}
+
+// ---- MY APPLICATIONS ----
+async function loadMyApps() {
+  const apps = await gCall('getStudentApplications', currentUser.StudentID);
+  const tbody = document.getElementById('myAppsTable');
+  tbody.innerHTML = apps.length ? apps.reverse().map(a=>`<tr>
+    <td><strong>${a.JobTitle}</strong></td>
+    <td>${a.CompanyName}</td>
+    <td>${formatDate(a.AppliedAt)}</td>
+    <td>${statusPill(a.Status)}</td>
+    <td style="color:var(--muted);max-width:200px;white-space:normal">${a.AdminRemarks||'—'}</td></tr>`).join('') :
+    `<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem">No applications yet.</td></tr>`;
+}
+
+// ---- PROFILE ----
+function loadProfile() {
+  const s = currentUser;
+  document.getElementById('profileView').innerHTML = `
+    <div class="profile-header">
+      <div class="profile-avatar">${s.Name[0]}</div>
+      <div class="profile-info">
+        <h2>${s.Name}</h2>
+        <p>${s.Email} · ${s.Phone||'—'}</p>
+        <div class="profile-tags">
+          <span class="tag tag-cyan">${s.Branch}</span>
+          <span class="tag tag-green">CGPA ${s.CGPA}</span>
+          <span class="tag ${parseInt(s.Backlogs)>0?'tag-red':'tag-green'}">${s.Backlogs||0} Backlogs</span>
+          <span class="tag tag-purple">Batch ${s.PassingYear}</span>
+        </div>
+        ${s.ResumeURL?`<a href="${s.ResumeURL}" target="_blank" class="btn btn-sm btn-outline" style="margin-top:.8rem"><i class="fas fa-file-pdf"></i> View Resume</a>`:''}
+      </div>
+    </div>
+    <div class="profile-grid">
+      <div class="profile-section">
+        <h3><i class="fas fa-info-circle"></i> Academic Info</h3>
+        <div class="info-row"><span class="info-label">Student ID</span><strong>${s.StudentID}</strong></div>
+        <div class="info-row"><span class="info-label">Branch</span><strong>${s.Branch}</strong></div>
+        <div class="info-row"><span class="info-label">CGPA</span><strong>${s.CGPA}</strong></div>
+        <div class="info-row"><span class="info-label">Backlogs</span><strong>${s.Backlogs||0}</strong></div>
+        <div class="info-row"><span class="info-label">Passing Year</span><strong>${s.PassingYear}</strong></div>
+      </div>
+      <div class="profile-section">
+        <h3><i class="fas fa-tools"></i> Skills</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:.5rem">
+          ${(s.Skills||'').split(',').filter(Boolean).map(sk=>`<span class="tag tag-purple">${sk.trim()}</span>`).join('') || '<span style="color:var(--muted)">No skills added</span>'}
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('editPhone').value = s.Phone||'';
+  document.getElementById('editCGPA').value = s.CGPA||'';
+  document.getElementById('editBacklogs').value = s.Backlogs||0;
+  document.getElementById('editSkills').value = s.Skills||'';
+  document.getElementById('editResume').value = s.ResumeURL||'';
+}
+
+function toggleEditProfile() {
+  const v = document.getElementById('profileView');
+  const e = document.getElementById('profileEdit');
+  if (v.style.display === 'none') { v.style.display = ''; e.style.display = 'none'; }
+  else { v.style.display = 'none'; e.style.display = ''; }
+}
+
+async function saveProfile() {
+  showLoader();
+  try {
+    const data = {
+      phone: document.getElementById('editPhone').value,
+      cgpa: document.getElementById('editCGPA').value,
+      backlogs: document.getElementById('editBacklogs').value,
+      skills: document.getElementById('editSkills').value,
+      resumeURL: document.getElementById('editResume').value
+    };
+    const res = await gCall('updateStudentProfile', currentUser.StudentID, data);
+    hideLoader();
+    if (res.success) {
+      Object.assign(currentUser, { Phone: data.phone, CGPA: data.cgpa, Backlogs: data.backlogs, Skills: data.skills, ResumeURL: data.resumeURL });
+      showAlert('profileSuccess', 'Profile updated successfully!', 'success');
+      toggleEditProfile();
+      loadProfile();
+    } else showAlert('profileSuccess', res.message || 'Error updating profile.');
+  } catch(e) { hideLoader(); }
+}
+
+// ---- ADMIN DASHBOARD ----
+async function loadAdminDashboard() {
+  const stats = await gCall('getDashboardStats');
+  document.getElementById('adminStats').innerHTML = `
+    <div class="stat-card"><div class="stat-card-icon">🎓</div><div class="stat-card-num" style="color:var(--accent)">${stats.totalStudents}</div><div class="stat-card-label">Students</div></div>
+    <div class="stat-card"><div class="stat-card-icon">🏢</div><div class="stat-card-num" style="color:var(--accent2)">${stats.totalCompanies}</div><div class="stat-card-label">Companies</div></div>
+    <div class="stat-card"><div class="stat-card-icon">💼</div><div class="stat-card-num" style="color:var(--warning)">${stats.activeJobs}</div><div class="stat-card-label">Active Jobs</div></div>
+    <div class="stat-card"><div class="stat-card-icon">📋</div><div class="stat-card-num">${stats.totalApplications}</div><div class="stat-card-label">Applications</div></div>
+    <div class="stat-card"><div class="stat-card-icon">🎉</div><div class="stat-card-num" style="color:var(--success)">${stats.placedStudents}</div><div class="stat-card-label">Placed</div></div>`;
+
+  const apps = await gCall('getAllApplications');
+  const recent = apps.slice(-5).reverse();
+  document.getElementById('adminRecentApps').innerHTML = recent.length ?
+    recent.map(a=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">
+      <span>${a.StudentName} → <strong>${a.JobTitle}</strong></span>${statusPill(a.Status)}</div>`).join('') :
+    '<p style="color:var(--muted);font-size:13px">No applications yet.</p>';
+
+  const statusCount = apps.reduce((acc,a) => { acc[a.Status]=(acc[a.Status]||0)+1; return acc; }, {});
+  document.getElementById('adminStatusBreakdown').innerHTML = Object.entries(statusCount).map(([s,c])=>
+    `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">
+    ${statusPill(s)}<strong>${c}</strong></div>`).join('') || '<p style="color:var(--muted)">No data.</p>';
+}
+
+// ---- ADMIN STUDENTS ----
+async function loadAdminStudents() {
+  allStudents = await gCall('getAllStudents');
+  renderStudentsTable(allStudents);
+}
+function renderStudentsTable(students) {
+  document.getElementById('studentsTable').innerHTML = students.length ?
+    students.map(s=>`<tr>
+      <td><strong>${s.Name}</strong></td><td>${s.Email}</td><td><span class="tag tag-cyan">${s.Branch}</span></td>
+      <td>${s.CGPA}</td><td>${s.Backlogs||0}</td><td>${s.PassingYear}</td>
+      <td>${s.ResumeURL?`<a href="${s.ResumeURL}" target="_blank" class="btn btn-xs btn-outline"><i class="fas fa-file"></i> View</a>`:'—'}</td></tr>`).join('') :
+    `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem">No students registered.</td></tr>`;
+}
+function filterStudents() {
+  const q = document.getElementById('studentSearch').value.toLowerCase();
+  renderStudentsTable(allStudents.filter(s => s.Name.toLowerCase().includes(q)||s.Email.toLowerCase().includes(q)||s.Branch.toLowerCase().includes(q)));
+}
+
+// ---- ADMIN COMPANIES ----
+async function loadAdminCompanies() {
+  allCompanies = await gCall('getCompanies');
+  document.getElementById('companiesGrid').innerHTML = allCompanies.length ?
+    allCompanies.map(c=>`<div class="card">
+      <div class="card-header"><strong style="font-size:1.1rem">${c.Name}</strong>${c.Website?`<a href="${c.Website}" target="_blank" class="btn btn-xs btn-outline"><i class="fas fa-external-link-alt"></i></a>`:''}</div>
+      <span class="tag tag-purple">${c.Industry||'—'}</span>
+      <p style="color:var(--muted);font-size:13px;margin-top:.8rem">${c.Description||'No description.'}</p>
+    </div>`).join('') :
+    `<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-building"></i><p>No companies added yet.</p></div>`;
+}
+
+// ---- ADMIN JOBS ----
+async function loadAdminJobs() {
+  const jobs = await gCall('getAllJobs');
+  const apps = await gCall('getAllApplications');
+  document.getElementById('adminJobsTable').innerHTML = jobs.length ?
+    jobs.map(j=>{
+      const appCount = apps.filter(a=>a.JobID===j.JobID).length;
+      return `<tr>
+        <td><strong>${j.Title}</strong></td><td>${j.CompanyName}</td>
+        <td>${j.Package}</td><td>${j.JobType}</td>
+        <td>${formatDate(j.Deadline)}</td><td>${statusPill(j.Status)}</td>
+        <td><span class="tag tag-cyan">${appCount}</span></td>
+        <td>
+          ${j.Status==='Active'?`<button class="btn btn-xs btn-danger" onclick="closeJob('${j.JobID}')">Close</button>`:`<button class="btn btn-xs btn-success" onclick="openJob('${j.JobID}')">Open</button>`}
+        </td></tr>`;}).join('') :
+    `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:2rem">No jobs posted yet.</td></tr>`;
+}
+async function closeJob(id) {
+  if (!confirm('Close this job?')) return;
+  await gCall('updateJobStatus', id, 'Closed');
+  loadAdminJobs();
+}
+async function openJob(id) {
+  await gCall('updateJobStatus', id, 'Active');
+  loadAdminJobs();
+}
+
+// ---- ADMIN APPLICATIONS ----
+async function loadAdminApps() {
+  allApplications = await gCall('getAllApplications');
+  renderAdminApps(allApplications);
+}
+function renderAdminApps(apps) {
+  document.getElementById('adminAppsTable').innerHTML = apps.length ?
+    apps.reverse().map(a=>`<tr>
+      <td><strong>${a.StudentName}</strong><br><small style="color:var(--muted)">${a.StudentID}</small></td>
+      <td>${a.JobTitle}</td><td>${a.CompanyName}</td>
+      <td>${formatDate(a.AppliedAt)}</td><td>${statusPill(a.Status)}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-xs" style="background:rgba(245,158,11,.15);color:var(--warning)" onclick="updateApp('${a.AppID}','Shortlisted','')">Shortlist</button>
+        <button class="btn btn-xs btn-success" onclick="updateApp('${a.AppID}','Selected','Congratulations!')">Select</button>
+        <button class="btn btn-xs btn-danger" onclick="updateApp('${a.AppID}','Rejected','Better luck next time.')">Reject</button>
+      </td></tr>`).join('') :
+    `<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">No applications.</td></tr>`;
+}
+function filterAdminApps() {
+  const status = document.getElementById('filterAppStatus').value;
+  const q = document.getElementById('appSearch').value.toLowerCase();
+  renderAdminApps(allApplications.filter(a =>
+    (!status || a.Status === status) &&
+    (!q || a.StudentName.toLowerCase().includes(q) || a.JobTitle.toLowerCase().includes(q))
+  ));
+}
+async function updateApp(appId, status, remarks) {
+  showLoader();
+  await gCall('updateApplicationStatus', appId, status, remarks);
+  hideLoader();
+  loadAdminApps();
+}
+
+// ---- ADD JOB MODAL ----
+async function openAddJobModal() {
+  allCompanies = await gCall('getCompanies');
+  const sel = document.getElementById('jobCompany');
+  sel.innerHTML = '<option value="">Select Company</option>' + allCompanies.map(c=>`<option value="${c.CompanyID}|${c.Name}">${c.Name}</option>`).join('');
+  openModal('addJobModal');
+}
+async function addJob() {
+  const compVal = document.getElementById('jobCompany').value.split('|');
+  const data = {
+    title: document.getElementById('jobTitle').value.trim(),
+    companyId: compVal[0], companyName: compVal[1],
+    description: document.getElementById('jobDesc').value.trim(),
+    location: document.getElementById('jobLocation').value.trim(),
+    package: document.getElementById('jobPackage').value.trim(),
+    jobType: document.getElementById('jobType').value,
+    minCGPA: document.getElementById('jobMinCGPA').value,
+    maxBacklogs: document.getElementById('jobMaxBacklogs').value,
+    allowedBranches: document.getElementById('jobBranches').value,
+    deadline: document.getElementById('jobDeadline').value
+  };
+  if (!data.title||!data.companyId||!data.location||!data.deadline) return showAlert('jobErr','Fill all required fields.');
+  showLoader();
+  const res = await gCall('addJob', data);
+  hideLoader();
+  if (res.success) { showAlert('jobSuccess','Job posted!','success'); loadAdminJobs(); }
+  else showAlert('jobErr', res.message);
+}
+
+async function addCompany() {
+  const data = {
+    name: document.getElementById('compName').value.trim(),
+    industry: document.getElementById('compIndustry').value.trim(),
+    website: document.getElementById('compWebsite').value.trim(),
+    description: document.getElementById('compDesc').value.trim()
+  };
+  if (!data.name) return;
+  showLoader();
+  const res = await gCall('addCompany', data);
+  hideLoader();
+  if (res.success) { showAlert('companySuccess','Company added!','success'); loadAdminCompanies(); }
+}
+</script>
+</body>
+</html>
