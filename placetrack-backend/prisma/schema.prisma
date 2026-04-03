@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  student_id    String        @id @db.VarChar(20)
+  name          String        @db.VarChar(100)
+  email         String        @unique @db.VarChar(150)
+  phone         String?       @db.VarChar(15)
+  branch        String        @db.VarChar(10)
+  cgpa          Decimal       @db.Decimal(3, 1)
+  backlogs      Int           @default(0)
+  passing_year  Int
+  password_hash String        @db.VarChar(255)
+  skills        String?       @db.Text
+  resume_url    String?       @db.Text
+  created_at    DateTime      @default(now()) @db.Timestamptz()
+  applications  Application[]
+
+  @@map("students")
+}
+
+model Admin {
+  admin_id      Int      @id @default(autoincrement())
+  name          String   @db.VarChar(100)
+  email         String   @unique @db.VarChar(150)
+  password_hash String   @db.VarChar(255)
+  created_at    DateTime @default(now()) @db.Timestamptz()
+
+  @@map("admins")
+}
+
+model Company {
+  company_id  String   @id @db.VarChar(20)
+  name        String   @unique @db.VarChar(150)
+  industry    String?  @db.VarChar(100)
+  website     String?  @db.Text
+  description String?  @db.Text
+  created_at  DateTime @default(now()) @db.Timestamptz()
+  jobs        Job[]
+
+  @@map("companies")
+}
+
+model Job {
+  job_id           String        @id @db.VarChar(20)
+  company_id       String        @db.VarChar(20)
+  company_name     String        @db.VarChar(150)
+  title            String        @db.VarChar(150)
+  description      String?       @db.Text
+  location         String        @db.VarChar(100)
+  package          String        @db.VarChar(50)
+  job_type         String        @default("Full-Time") @db.VarChar(20)
+  min_cgpa         Decimal       @default(0) @db.Decimal(3, 1)
+  max_backlogs     Int           @default(0)
+  allowed_branches String?       @db.Text
+  deadline         DateTime      @db.Date
+  status           String        @default("Active") @db.VarChar(10)
+  created_at       DateTime      @default(now()) @db.Timestamptz()
+  company          Company       @relation(fields: [company_id], references: [company_id], onDelete: Cascade)
+  applications     Application[]
+
+  @@map("jobs")
+}
+
+model Application {
+  app_id        String   @id @db.VarChar(20)
+  student_id    String   @db.VarChar(20)
+  student_name  String   @db.VarChar(100)
+  job_id        String   @db.VarChar(20)
+  job_title     String   @db.VarChar(150)
+  company_name  String   @db.VarChar(150)
+  applied_at    DateTime @default(now()) @db.Timestamptz()
+  status        String   @default("Applied") @db.VarChar(15)
+  admin_remarks String?  @db.Text
+  student       Student  @relation(fields: [student_id], references: [student_id])
+  job           Job      @relation(fields: [job_id], references: [job_id])
+
+  @@unique([student_id, job_id])
+  @@map("applications")
+}
