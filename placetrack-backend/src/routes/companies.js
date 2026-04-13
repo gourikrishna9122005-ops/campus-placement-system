@@ -67,4 +67,20 @@ router.post('/', requireAuth, requireAdmin, async (req, res) => {
   }
 });
 
+// ── DELETE /api/companies/:companyId — Admin only ──
+router.delete('/:companyId', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const { companyId } = req.params;
+    const company = await prisma.company.findUnique({ where: { company_id: companyId } });
+    if (!company) {
+      return res.status(404).json({ success: false, message: 'Company not found' });
+    }
+    await prisma.company.delete({ where: { company_id: companyId } });
+    return res.json({ success: true, message: 'Company deleted successfully' });
+  } catch (err) {
+    console.error('Delete company error:', err);
+    return res.status(500).json({ success: false, message: 'Server error deleting company' });
+  }
+});
+
 module.exports = router;

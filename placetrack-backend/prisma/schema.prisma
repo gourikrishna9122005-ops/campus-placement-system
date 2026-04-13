@@ -78,8 +78,8 @@ model Application {
   applied_at    DateTime @default(now()) @db.Timestamptz()
   status        String   @default("Applied") @db.VarChar(15)
   admin_remarks String?  @db.Text
-  student       Student  @relation(fields: [student_id], references: [student_id])
-  job           Job      @relation(fields: [job_id], references: [job_id])
+  student       Student  @relation(fields: [student_id], references: [student_id], onDelete: Cascade)
+  job           Job      @relation(fields: [job_id], references: [job_id], onDelete: Cascade)
 
   @@unique([student_id, job_id])
   @@map("applications")

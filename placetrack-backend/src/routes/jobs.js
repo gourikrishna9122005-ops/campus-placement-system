@@ -122,4 +122,20 @@ router.patch('/:jobId/status', requireAuth, requireAdmin, async (req, res) => {
   }
 });
 
+// ── DELETE /api/jobs/:jobId — Admin only ──
+router.delete('/:jobId', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const job = await prisma.job.findUnique({ where: { job_id: jobId } });
+    if (!job) {
+      return res.status(404).json({ success: false, message: 'Job not found' });
+    }
+    await prisma.job.delete({ where: { job_id: jobId } });
+    return res.json({ success: true, message: 'Job deleted successfully' });
+  } catch (err) {
+    console.error('Delete job error:', err);
+    return res.status(500).json({ success: false, message: 'Server error deleting job' });
+  }
+});
+
 module.exports = router;
