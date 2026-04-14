@@ -28,8 +28,16 @@ function mapJob(j) {
 // ── Helper: generate job ID ──
 async function genJobId() {
   const year = new Date().getFullYear();
-  const count = await prisma.job.count();
-  return `JOB-${year}-${String(count + 1).padStart(4, '0')}`;
+  const lastJob = await prisma.job.findFirst({
+    where: { job_id: { startsWith: `JOB-${year}-` } },
+    orderBy: { job_id: 'desc' },
+  });
+
+  if (!lastJob) return `JOB-${year}-0001`;
+
+  const parts = lastJob.job_id.split('-');
+  const lastCount = parts.length === 3 ? parseInt(parts[2], 10) : 0;
+  return `JOB-${year}-${String(lastCount + 1).padStart(4, '0')}`;
 }
 
 // ── GET /api/jobs/active — JWT required ──

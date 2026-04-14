@@ -8,8 +8,16 @@ const router = express.Router();
 // ── Helper: generate student ID ──
 async function genStudentId() {
   const year = new Date().getFullYear();
-  const count = await prisma.student.count();
-  return `STU-${year}-${String(count + 1).padStart(4, '0')}`;
+  const lastStudent = await prisma.student.findFirst({
+    where: { student_id: { startsWith: `STU-${year}-` } },
+    orderBy: { student_id: 'desc' },
+  });
+
+  if (!lastStudent) return `STU-${year}-0001`;
+
+  const parts = lastStudent.student_id.split('-');
+  const lastCount = parts.length === 3 ? parseInt(parts[2], 10) : 0;
+  return `STU-${year}-${String(lastCount + 1).padStart(4, '0')}`;
 }
 
 // ── POST /api/auth/student/register ──
@@ -59,6 +67,13 @@ router.post('/student/register', async (req, res) => {
     return res.status(201).json({ success: true, message: 'Registration successful!' });
   } catch (err) {
     console.error('Register error:', err);
+    // Return a more specific error message
+    if (err.code === 'P2002') {
+      return res.status(409).json({ success: false, message: 'A student with this email or ID already exists.' });
+    }
+    if (err.message && err.message.includes("Can't reach database")) {
+      return res.status(503).json({ success: false, message: 'Database is waking up. Please try again in a few seconds.' });
+    }
     return res.status(500).json({ success: false, message: 'Server error during registration' });
   }
 });

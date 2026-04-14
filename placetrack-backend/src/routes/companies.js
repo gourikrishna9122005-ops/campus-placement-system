@@ -7,8 +7,16 @@ const router = express.Router();
 
 // ── Helper: generate company ID (no year) ──
 async function genCompanyId() {
-  const count = await prisma.company.count();
-  return `CMP-${String(count + 1).padStart(4, '0')}`;
+  const lastCompany = await prisma.company.findFirst({
+    where: { company_id: { startsWith: 'CMP-' } },
+    orderBy: { company_id: 'desc' },
+  });
+
+  if (!lastCompany) return 'CMP-0001';
+
+  const parts = lastCompany.company_id.split('-');
+  const lastCount = parts.length === 2 ? parseInt(parts[1], 10) : 0;
+  return `CMP-${String(lastCount + 1).padStart(4, '0')}`;
 }
 
 // ── GET /api/companies — JWT required ──
