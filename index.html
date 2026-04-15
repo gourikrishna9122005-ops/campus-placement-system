@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PlaceTrack — Campus Placement Portal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     :root {
@@ -15,22 +18,23 @@
       --card: #111111;
       --border: rgba(255, 255, 255, 0.1);
       --border-hover: rgba(255, 255, 255, 0.2);
-      
+
       --text: #ededed;
       --muted: #888888;
-      
+
       --accent: #ffffff;
       --accent-bg: #1a1a1a;
-      
-      --brand: #e2e8f0; /* primary subtle brand */
+
+      --brand: #e2e8f0;
+      /* primary subtle brand */
       --brand-glow: rgba(255, 255, 255, 0.05);
 
       --success-bg: rgba(16, 185, 129, 0.1);
       --success-text: #10b981;
-      
+
       --warning-bg: rgba(245, 158, 11, 0.1);
       --warning-text: #f59e0b;
-      
+
       --danger-bg: rgba(239, 68, 68, 0.1);
       --danger-text: #ef4444;
 
@@ -42,13 +46,13 @@
       --radius-lg: 16px;
       --radius-full: 9999px;
 
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.5);
-      --shadow-glow: 0 0 20px rgba(255,255,255,0.05);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 20px rgba(255, 255, 255, 0.05);
       --shadow-focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--border-hover);
-      
+
       --font-sans: 'Inter', system-ui, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
-      
+
       --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -92,6 +96,7 @@
       justify-content: center;
       transition: opacity 0.4s ease;
     }
+
     .loader-ring {
       width: 40px;
       height: 40px;
@@ -100,7 +105,13 @@
       border-radius: var(--radius-full);
       animation: spin 0.8s linear infinite;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
     .loader-text {
       margin-top: 1rem;
       font-size: 13px;
@@ -119,16 +130,20 @@
       align-items: center;
       justify-content: center;
     }
-    .loading-overlay.show { display: flex; }
+
+    .loading-overlay.show {
+      display: flex;
+    }
+
     .loading-box {
       background: var(--card);
-      border: 1px solid var(--border);  
+      border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
     }
 
     /* ---- PAGES ---- */
@@ -137,14 +152,23 @@
       width: 100%;
       flex: 1;
     }
+
     .page.active {
       display: flex;
       flex-direction: column;
       animation: fadeIn 0.4s ease;
     }
+
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(5px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* ---- LANDING ---- */
@@ -155,10 +179,11 @@
       justify-content: center;
       overflow: hidden;
     }
+
     .bg-grid {
       position: absolute;
       inset: -50%;
-      background-image: 
+      background-image:
         linear-gradient(var(--border) 1px, transparent 1px),
         linear-gradient(90deg, var(--border) 1px, transparent 1px);
       background-size: 40px 40px;
@@ -166,12 +191,14 @@
       transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
       pointer-events: none;
     }
+
     .bg-gradient {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.05) 0%, transparent 50%);
+      background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
       pointer-events: none;
     }
+
     .landing-content {
       position: relative;
       z-index: 10;
@@ -182,6 +209,7 @@
       flex-direction: column;
       align-items: center;
     }
+
     .badge {
       display: inline-flex;
       align-items: center;
@@ -196,6 +224,7 @@
       margin-bottom: 2rem;
       backdrop-filter: blur(10px);
     }
+
     .badge-dot {
       width: 6px;
       height: 6px;
@@ -203,8 +232,19 @@
       border-radius: var(--radius-full);
       animation: blink 2s infinite;
     }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-    
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
+    }
+
     h1.hero {
       font-size: clamp(3rem, 8vw, 5rem);
       font-weight: 700;
@@ -213,9 +253,11 @@
       margin-bottom: 1.5rem;
       color: #fff;
     }
+
     h1.hero span.grad {
       color: var(--muted);
     }
+
     .hero-sub {
       font-size: clamp(1.1rem, 2vw, 1.25rem);
       color: var(--muted);
@@ -223,6 +265,7 @@
       line-height: 1.6;
       margin-bottom: 3rem;
     }
+
     .btn-group {
       display: flex;
       gap: 1rem;
@@ -230,7 +273,7 @@
       justify-content: center;
       margin-bottom: 4rem;
     }
-    
+
     /* ---- BUTTONS ---- */
     .btn {
       display: inline-flex;
@@ -246,52 +289,64 @@
       border: 1px solid transparent;
       outline: none;
     }
-    .btn:focus-visible { box-shadow: var(--shadow-focus); }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    
+
+    .btn:focus-visible {
+      box-shadow: var(--shadow-focus);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     .btn-primary {
       background: var(--accent);
       color: var(--bg);
     }
+
     .btn-primary:not(:disabled):hover {
       background: #d4d4d4;
       transform: translateY(-1px);
     }
-    
+
     .btn-secondary {
       background: var(--card);
       color: var(--text);
       border-color: var(--border);
     }
+
     .btn-secondary:not(:disabled):hover {
       background: var(--border);
       border-color: var(--border-hover);
     }
-    
+
     .btn-outline {
       background: transparent;
       color: var(--text);
       border-color: var(--border);
     }
+
     .btn-outline:not(:disabled):hover {
       background: var(--border);
       color: #fff;
     }
-    
+
     .btn-danger {
       background: var(--danger-bg);
       color: var(--danger-text);
       border-color: var(--danger-bg);
     }
+
     .btn-danger:not(:disabled):hover {
       background: rgba(239, 68, 68, 0.2);
     }
-    
+
     .btn-success {
       background: var(--success-bg);
       color: var(--success-text);
       border-color: var(--success-bg);
     }
+
     .btn-success:not(:disabled):hover {
       background: rgba(16, 185, 129, 0.2);
     }
@@ -301,6 +356,7 @@
       color: var(--warning-text);
       border-color: var(--warning-bg);
     }
+
     .btn-warning:not(:disabled):hover {
       background: rgba(245, 158, 11, 0.2);
     }
@@ -309,6 +365,7 @@
       padding: 0.5rem 1rem;
       font-size: 13px;
     }
+
     .btn-xs {
       padding: 0.3rem 0.6rem;
       font-size: 12px;
@@ -326,12 +383,14 @@
       width: 100%;
       max-width: 800px;
     }
+
     .stat-item {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.25rem;
     }
+
     .stat-num {
       font-family: var(--font-mono);
       font-size: 2.5rem;
@@ -339,6 +398,7 @@
       color: var(--accent);
       letter-spacing: -0.05em;
     }
+
     .stat-label {
       font-size: 13px;
       color: var(--muted);
@@ -357,12 +417,22 @@
       justify-content: center;
       padding: 1rem;
     }
+
     .modal-overlay.open {
       display: flex;
       animation: fadeOverlay 0.2s ease;
     }
-    @keyframes fadeOverlay { from { opacity: 0; } to { opacity: 1; } }
-    
+
+    @keyframes fadeOverlay {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
     .modal {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -376,11 +446,19 @@
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
-    
+
     .modal-close {
       position: absolute;
       top: 1.5rem;
@@ -398,11 +476,12 @@
       border-radius: var(--radius-sm);
       transition: background var(--transition);
     }
+
     .modal-close:hover {
       background: var(--border);
       color: var(--accent);
     }
-    
+
     .modal h2 {
       font-size: 1.5rem;
       font-weight: 600;
@@ -410,6 +489,7 @@
       margin-bottom: 0.5rem;
       color: #fff;
     }
+
     .modal p.sub {
       color: var(--muted);
       font-size: 14px;
@@ -420,6 +500,7 @@
     .form-group {
       margin-bottom: 1.25rem;
     }
+
     .form-group label {
       display: block;
       font-size: 13px;
@@ -427,6 +508,7 @@
       color: var(--text);
       margin-bottom: 0.5rem;
     }
+
     .form-group input,
     .form-group select,
     .form-group textarea {
@@ -441,27 +523,34 @@
       outline: none;
       font-family: inherit;
     }
+
     .form-group input::placeholder,
     .form-group textarea::placeholder {
       color: #444;
     }
+
     .form-group input:hover,
     .form-group select:hover,
     .form-group textarea:hover {
       border-color: var(--border-hover);
     }
+
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus {
       border-color: #666;
       box-shadow: 0 0 0 1px #666;
     }
+
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
     }
-    .form-full { grid-column: 1 / -1; }
+
+    .form-full {
+      grid-column: 1 / -1;
+    }
 
     /* ---- ALERTS ---- */
     .alert {
@@ -474,9 +563,22 @@
       align-items: center;
       gap: 0.5rem;
     }
-    .alert.show { display: flex; }
-    .alert-success { background: var(--success-bg); color: var(--success-text); border: 1px solid rgba(16, 185, 129, 0.2); }
-    .alert-error { background: var(--danger-bg); color: var(--danger-text); border: 1px solid rgba(239, 68, 68, 0.2); }
+
+    .alert.show {
+      display: flex;
+    }
+
+    .alert-success {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .alert-error {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
 
     /* ---- APP LAYOUT ---- */
     #app {
@@ -485,7 +587,10 @@
       min-height: 100vh;
       background: var(--bg);
     }
-    #app.active { display: flex; }
+
+    #app.active {
+      display: flex;
+    }
 
     /* ---- SIDEBAR ---- */
     .sidebar {
@@ -499,6 +604,7 @@
       position: sticky;
       top: 0;
     }
+
     .sidebar-logo {
       padding: 1.5rem;
       border-bottom: 1px solid var(--border);
@@ -506,6 +612,7 @@
       align-items: center;
       gap: 0.75rem;
     }
+
     .sidebar-logo .logo-icon {
       width: 32px;
       height: 32px;
@@ -518,17 +625,20 @@
       font-weight: 700;
       font-size: 16px;
     }
+
     .sidebar-logo .logo-text {
       font-size: 15px;
       font-weight: 600;
       letter-spacing: -0.02em;
     }
+
     .sidebar-user {
       padding: 1.5rem;
       display: flex;
       align-items: center;
       gap: 0.75rem;
     }
+
     .user-avatar {
       width: 36px;
       height: 36px;
@@ -542,9 +652,11 @@
       font-size: 14px;
       flex-shrink: 0;
     }
+
     .user-info {
       overflow: hidden;
     }
+
     .user-name {
       font-size: 14px;
       font-weight: 500;
@@ -552,11 +664,13 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     .user-role {
       font-size: 12px;
       color: var(--muted);
       margin-top: 0.1rem;
     }
+
     .sidebar-nav {
       flex: 1;
       overflow-y: auto;
@@ -565,6 +679,7 @@
       flex-direction: column;
       gap: 1.5rem;
     }
+
     .nav-section-label {
       font-size: 11px;
       font-weight: 600;
@@ -574,6 +689,7 @@
       margin-bottom: 0.5rem;
       padding: 0 0.75rem;
     }
+
     .nav-item {
       display: flex;
       align-items: center;
@@ -587,20 +703,24 @@
       transition: all var(--transition);
       margin-bottom: 2px;
     }
+
     .nav-item i {
       font-size: 15px;
       width: 18px;
       display: flex;
       justify-content: center;
     }
+
     .nav-item:hover {
       background: var(--card);
       color: var(--text);
     }
+
     .nav-item.active {
       background: var(--border);
       color: var(--text);
     }
+
     .sidebar-footer {
       padding: 1.5rem;
       border-top: 1px solid var(--border);
@@ -613,15 +733,18 @@
       height: 100vh;
       overflow-y: auto;
     }
+
     .content-section {
       display: none;
       animation: fadeIn 0.3s ease;
       max-width: 1200px;
       margin: 0 auto;
     }
+
     .content-section.active {
       display: block;
     }
+
     .section-header {
       display: flex;
       align-items: flex-start;
@@ -630,12 +753,14 @@
       gap: 1.5rem;
       flex-wrap: wrap;
     }
+
     .section-title {
       font-size: 1.75rem;
       font-weight: 600;
       letter-spacing: -0.02em;
       color: #fff;
     }
+
     .section-sub {
       font-size: 14px;
       color: var(--muted);
@@ -649,6 +774,7 @@
       gap: 1.5rem;
       margin-bottom: 3rem;
     }
+
     .stat-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -659,9 +785,11 @@
       gap: 0.75rem;
       transition: border-color var(--transition);
     }
+
     .stat-card:hover {
       border-color: var(--border-hover);
     }
+
     .stat-card-icon {
       width: 40px;
       height: 40px;
@@ -672,6 +800,7 @@
       justify-content: center;
       font-size: 18px;
     }
+
     .stat-card-num {
       font-size: 2rem;
       font-weight: 600;
@@ -679,6 +808,7 @@
       color: var(--text);
       line-height: 1;
     }
+
     .stat-card-label {
       font-size: 13px;
       color: var(--muted);
@@ -691,6 +821,7 @@
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 1.5rem;
     }
+
     .card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -700,10 +831,12 @@
       flex-direction: column;
       transition: all var(--transition);
     }
+
     .card:hover {
       border-color: var(--border-hover);
       box-shadow: var(--shadow-glow);
     }
+
     .card-header {
       display: flex;
       justify-content: space-between;
@@ -711,17 +844,20 @@
       margin-bottom: 1rem;
       gap: 1rem;
     }
+
     .company-badge {
       font-size: 13px;
       font-weight: 500;
       color: var(--muted);
     }
+
     .job-title {
       font-size: 1.15rem;
       font-weight: 600;
       color: #fff;
       margin-bottom: 0.25rem;
     }
+
     .job-company {
       font-size: 13px;
       color: var(--muted);
@@ -730,12 +866,14 @@
       align-items: center;
       gap: 0.5rem;
     }
+
     .job-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
       margin-bottom: 1.5rem;
     }
+
     .tag {
       padding: 0.25rem 0.6rem;
       border-radius: var(--radius-sm);
@@ -743,12 +881,37 @@
       font-weight: 500;
       border: 1px solid;
     }
-    .tag-cyan { background: var(--blue-bg); color: var(--blue-text); border-color: rgba(59,130,246,0.2); }
-    .tag-green { background: var(--success-bg); color: var(--success-text); border-color: rgba(16,185,129,0.2); }
-    .tag-orange { background: var(--warning-bg); color: var(--warning-text); border-color: rgba(245,158,11,0.2); }
-    .tag-red { background: var(--danger-bg); color: var(--danger-text); border-color: rgba(239,68,68,0.2); }
-    .tag-purple { background: rgba(139,92,246,0.1); color: #a78bfa; border-color: rgba(139,92,246,0.2); }
-    
+
+    .tag-cyan {
+      background: var(--blue-bg);
+      color: var(--blue-text);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .tag-green {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .tag-orange {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      border-color: rgba(245, 158, 11, 0.2);
+    }
+
+    .tag-red {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border-color: rgba(239, 68, 68, 0.2);
+    }
+
+    .tag-purple {
+      background: rgba(139, 92, 246, 0.1);
+      color: #a78bfa;
+      border-color: rgba(139, 92, 246, 0.2);
+    }
+
     .deadline-badge {
       display: flex;
       align-items: center;
@@ -757,10 +920,19 @@
       font-weight: 500;
       margin-bottom: 1rem;
     }
-    .deadline-ok { color: var(--muted); }
-    .deadline-soon { color: var(--warning-text); }
-    .deadline-passed { color: var(--danger-text); }
-    
+
+    .deadline-ok {
+      color: var(--muted);
+    }
+
+    .deadline-soon {
+      color: var(--warning-text);
+    }
+
+    .deadline-passed {
+      color: var(--danger-text);
+    }
+
     .card-actions {
       display: flex;
       gap: 0.75rem;
@@ -768,7 +940,7 @@
       padding-top: 1rem;
       border-top: 1px solid var(--border);
     }
-    
+
     /* ---- TABLES ---- */
     .table-wrap {
       background: var(--card);
@@ -776,11 +948,13 @@
       border-radius: var(--radius-lg);
       overflow-x: auto;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
     }
+
     th {
       padding: 1rem 1.25rem;
       font-size: 12px;
@@ -789,9 +963,10 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
       border-bottom: 1px solid var(--border);
-      background: rgba(255,255,255,0.02);
+      background: rgba(255, 255, 255, 0.02);
       white-space: nowrap;
     }
+
     td {
       padding: 1rem 1.25rem;
       font-size: 14px;
@@ -799,9 +974,15 @@
       color: var(--text);
       vertical-align: middle;
     }
-    tbody tr:last-child td { border-bottom: none; }
-    tbody tr:hover { background: rgba(255,255,255,0.02); }
-    
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
     /* ---- STATUS PILLS ---- */
     .status {
       display: inline-flex;
@@ -812,12 +993,42 @@
       font-weight: 500;
       border: 1px solid transparent;
     }
-    .status-applied { background: var(--blue-bg); color: var(--blue-text); border-color: rgba(59,130,246,0.2); }
-    .status-shortlisted { background: var(--warning-bg); color: var(--warning-text); border-color: rgba(245,158,11,0.2); }
-    .status-selected { background: var(--success-bg); color: var(--success-text); border-color: rgba(16,185,129,0.2); }
-    .status-rejected { background: var(--danger-bg); color: var(--danger-text); border-color: rgba(239,68,68,0.2); }
-    .status-active { background: var(--success-bg); color: var(--success-text); border-color: rgba(16,185,129,0.2); }
-    .status-closed { background: var(--border); color: var(--muted); border-color: var(--border-hover); }
+
+    .status-applied {
+      background: var(--blue-bg);
+      color: var(--blue-text);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .status-shortlisted {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      border-color: rgba(245, 158, 11, 0.2);
+    }
+
+    .status-selected {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .status-rejected {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border-color: rgba(239, 68, 68, 0.2);
+    }
+
+    .status-active {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .status-closed {
+      background: var(--border);
+      color: var(--muted);
+      border-color: var(--border-hover);
+    }
 
     /* ---- FILTERS & SEARCH ---- */
     .filter-row {
@@ -827,12 +1038,14 @@
       align-items: center;
       margin-bottom: 1.5rem;
     }
+
     .search-bar {
       position: relative;
       flex: 1;
       min-width: 260px;
       max-width: 360px;
     }
+
     .search-bar input {
       width: 100%;
       background: var(--bg);
@@ -844,7 +1057,11 @@
       outline: none;
       transition: border-color var(--transition);
     }
-    .search-bar input:focus { border-color: #666; }
+
+    .search-bar input:focus {
+      border-color: #666;
+    }
+
     .search-bar i {
       position: absolute;
       left: 1rem;
@@ -853,6 +1070,7 @@
       color: var(--muted);
       font-size: 13px;
     }
+
     .filter-select {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -864,7 +1082,10 @@
       cursor: pointer;
       min-width: 140px;
     }
-    .filter-select:focus { border-color: #666; }
+
+    .filter-select:focus {
+      border-color: #666;
+    }
 
     /* ---- ELIGIBILITY ---- */
     .elig-check {
@@ -875,11 +1096,34 @@
       margin-bottom: 1rem;
       font-size: 13px;
     }
-    .elig-pass { border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05); }
-    .elig-fail { border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05); }
-    .elig-header { display: flex; align-items: center; gap: 0.5rem; font-weight: 500; }
-    .elig-reasons { margin-top: 0.5rem; padding-left: 1.5rem; font-size: 12px; color: var(--danger-text); }
-    .elig-reasons li { margin-bottom: 0.25rem; }
+
+    .elig-pass {
+      border-color: rgba(16, 185, 129, 0.3);
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    .elig-fail {
+      border-color: rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    .elig-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+    }
+
+    .elig-reasons {
+      margin-top: 0.5rem;
+      padding-left: 1.5rem;
+      font-size: 12px;
+      color: var(--danger-text);
+    }
+
+    .elig-reasons li {
+      margin-bottom: 0.25rem;
+    }
 
     /* ---- PROFILE ---- */
     .profile-header {
@@ -893,6 +1137,7 @@
       align-items: center;
       flex-wrap: wrap;
     }
+
     .profile-avatar {
       width: 96px;
       height: 96px;
@@ -905,20 +1150,39 @@
       font-weight: 600;
       color: var(--text);
     }
-    .profile-info h2 { font-size: 1.75rem; font-weight: 600; margin-bottom: 0.25rem; color: #fff; }
-    .profile-info p { color: var(--muted); font-size: 14px; }
-    .profile-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+
+    .profile-info h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: #fff;
+    }
+
+    .profile-info p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .profile-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
     .profile-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 1.5rem;
     }
+
     .profile-section {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 1.5rem;
     }
+
     .profile-section h3 {
       font-size: 14px;
       font-weight: 600;
@@ -930,6 +1194,7 @@
       align-items: center;
       gap: 0.5rem;
     }
+
     .info-row {
       display: flex;
       justify-content: space-between;
@@ -937,9 +1202,18 @@
       border-bottom: 1px solid var(--border);
       font-size: 14px;
     }
-    .info-row:last-child { border-bottom: none; }
-    .info-label { color: var(--muted); }
-    .info-row strong { font-weight: 500; }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: var(--muted);
+    }
+
+    .info-row strong {
+      font-weight: 500;
+    }
 
     /* ---- EMPTY STATE ---- */
     .empty-state {
@@ -950,12 +1224,17 @@
       border: 1px dashed var(--border);
       border-radius: var(--radius-lg);
     }
+
     .empty-state i {
       font-size: 2.5rem;
       margin-bottom: 1rem;
       opacity: 0.5;
     }
-    .empty-state p { font-size: 14px; font-weight: 500; }
+
+    .empty-state p {
+      font-size: 14px;
+      font-weight: 500;
+    }
 
     /* ---- ADMIN CHARTS ---- */
     .admin-charts-row {
@@ -967,20 +1246,50 @@
 
     /* ---- RESPONSIVE ---- */
     @media (max-width: 1024px) {
-      .sidebar { width: 220px; }
-      .main-content { padding: 2rem; }
+      .sidebar {
+        width: 220px;
+      }
+
+      .main-content {
+        padding: 2rem;
+      }
     }
+
     @media (max-width: 768px) {
-      .sidebar { display: none; } /* Could add a hamburger menu */
-      .main-content { padding: 1.5rem; height: auto; overflow: visible; }
-      #app { flex-direction: column; }
-      .form-row { grid-template-columns: 1fr; }
-      .stat-cards { grid-template-columns: 1fr 1fr; }
-      .landing-stats { gap: 1.5rem; }
-      .admin-charts-row { grid-template-columns: 1fr; }
+      .sidebar {
+        display: none;
+      }
+
+      /* Could add a hamburger menu */
+      .main-content {
+        padding: 1.5rem;
+        height: auto;
+        overflow: visible;
+      }
+
+      #app {
+        flex-direction: column;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-cards {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .landing-stats {
+        gap: 1.5rem;
+      }
+
+      .admin-charts-row {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <!-- LOADER -->
@@ -1004,12 +1313,16 @@
     <div class="landing-content">
       <div class="badge"><span class="badge-dot"></span> PlaceTrack Active</div>
       <h1 class="hero">Accelerate<br><span class="grad">Your Career</span></h1>
-      <p class="hero-sub">The modern campus placement infrastructure. Built for students to discover opportunities and universities to manage recruitment efficiently.</p>
-      
+      <p class="hero-sub">The modern campus placement infrastructure. Built for students to discover opportunities and
+        universities to manage recruitment efficiently.</p>
+
       <div class="btn-group">
-        <button class="btn btn-primary" onclick="openModal('studentLoginModal')"><i class="fas fa-lock"></i> Student Portal</button>
-        <button class="btn btn-secondary" onclick="openModal('studentRegisterModal')"><i class="fas fa-user-plus"></i> Apply for Access</button>
-        <button class="btn btn-outline" onclick="openModal('adminLoginModal')"><i class="fas fa-shield-alt"></i> Admin Panel</button>
+        <button class="btn btn-primary" onclick="openModal('studentLoginModal')"><i class="fas fa-lock"></i> Student
+          Portal</button>
+        <button class="btn btn-secondary" onclick="openModal('studentRegisterModal')"><i class="fas fa-user-plus"></i>
+          Apply for Access</button>
+        <button class="btn btn-outline" onclick="openModal('adminLoginModal')"><i class="fas fa-shield-alt"></i> Admin
+          Panel</button>
       </div>
 
       <div class="landing-stats" style="margin-top:2rem">
@@ -1042,16 +1355,21 @@
           <h2>Sign In</h2>
           <p class="sub" style="margin-bottom:0">Access your student dashboard</p>
         </div>
-        <button class="btn btn-outline btn-xs" onclick="document.getElementById('loginEmail').value='gouri@gmail.com';document.getElementById('loginPass').value='password123';">
+        <button class="btn btn-outline btn-xs"
+          onclick="document.getElementById('loginEmail').value='gouri@gmail.com';document.getElementById('loginPass').value='password123';">
           <i class="fas fa-bolt"></i> Auto
         </button>
       </div>
       <div class="alert alert-error" id="loginErr"></div>
-      <div class="form-group"><label>Work Email</label><input type="email" id="loginEmail" placeholder="student@university.edu" /></div>
-      <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••" /></div>
-      <button class="btn btn-primary" style="width:100%; margin-top: 1rem;" onclick="studentLogin()">Continue <i class="fas fa-arrow-right"></i></button>
+      <div class="form-group"><label>Work Email</label><input type="email" id="loginEmail"
+          placeholder="student@university.edu" /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••" />
+      </div>
+      <button class="btn btn-primary" style="width:100%; margin-top: 1rem;" onclick="studentLogin()">Continue <i
+          class="fas fa-arrow-right"></i></button>
       <div style="text-align:center; margin-top:1.5rem; font-size:13px; color:var(--muted)">
-        Don't have an account? <a href="#" onclick="closeModal('studentLoginModal');openModal('studentRegisterModal')" style="color:var(--accent);font-weight:500;">Request Access</a>
+        Don't have an account? <a href="#" onclick="closeModal('studentLoginModal');openModal('studentRegisterModal')"
+          style="color:var(--accent);font-weight:500;">Request Access</a>
       </div>
     </div>
   </div>
@@ -1071,11 +1389,13 @@
       </div>
       <div class="alert alert-error" id="regErr"></div>
       <div class="alert alert-success" id="regSuccess"></div>
-      
+
       <div class="form-row">
         <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Jane Doe" /></div>
-        <div class="form-group"><label>Work Email</label><input type="email" id="regEmail" placeholder="jane@university.edu" /></div>
-        <div class="form-group"><label>Phone</label><input type="tel" id="regPhone" placeholder="+1 234 567 890" /></div>
+        <div class="form-group"><label>Work Email</label><input type="email" id="regEmail"
+            placeholder="jane@university.edu" /></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="regPhone" placeholder="+1 234 567 890" />
+        </div>
         <div class="form-group"><label>Branch</label>
           <select id="regBranch">
             <option value="">Select Department</option>
@@ -1090,14 +1410,22 @@
             <option>MCA</option>
           </select>
         </div>
-        <div class="form-group"><label>CGPA</label><input type="number" id="regCGPA" step="0.1" min="0" max="10" placeholder="e.g. 8.5" /></div>
-        <div class="form-group"><label>Active Backlogs</label><input type="number" id="regBacklogs" placeholder="0" value="0" /></div>
-        <div class="form-group"><label>Graduation Year</label><input type="number" id="regYear" placeholder="2025" /></div>
-        <div class="form-group"><label>Secure Password</label><input type="password" id="regPass" placeholder="Minimum 6 chars" /></div>
-        <div class="form-group form-full"><label>Technical Skills <span style="color:var(--muted);font-weight:400">(comma separated)</span></label><input type="text" id="regSkills" placeholder="React, Node.js, Python" /></div>
-        <div class="form-group form-full"><label>Resume Link URL</label><input type="url" id="regResume" placeholder="https://..." /></div>
+        <div class="form-group"><label>CGPA</label><input type="number" id="regCGPA" step="0.1" min="0" max="10"
+            placeholder="e.g. 8.5" /></div>
+        <div class="form-group"><label>Active Backlogs</label><input type="number" id="regBacklogs" placeholder="0"
+            value="0" /></div>
+        <div class="form-group"><label>Graduation Year</label><input type="number" id="regYear" placeholder="2025" />
+        </div>
+        <div class="form-group"><label>Secure Password</label><input type="password" id="regPass"
+            placeholder="Minimum 6 chars" /></div>
+        <div class="form-group form-full"><label>Technical Skills <span
+              style="color:var(--muted);font-weight:400">(comma separated)</span></label><input type="text"
+            id="regSkills" placeholder="React, Node.js, Python" /></div>
+        <div class="form-group form-full"><label>Resume Link URL</label><input type="url" id="regResume"
+            placeholder="https://..." /></div>
       </div>
-      <button class="btn btn-primary" style="width:100%; margin-top: 1rem;" onclick="registerStudent()">Register Account</button>
+      <button class="btn btn-primary" style="width:100%; margin-top: 1rem;" onclick="registerStudent()">Register
+        Account</button>
     </div>
   </div>
 
@@ -1110,13 +1438,16 @@
           <h2>System Admin</h2>
           <p class="sub" style="margin-bottom:0">Authorized personnel only</p>
         </div>
-        <button class="btn btn-outline btn-xs" onclick="document.getElementById('adminEmail').value='admin@college.edu';document.getElementById('adminPass').value='admin123';">
+        <button class="btn btn-outline btn-xs"
+          onclick="document.getElementById('adminEmail').value='admin@college.edu';document.getElementById('adminPass').value='admin123';">
           <i class="fas fa-bolt"></i> Auto
         </button>
       </div>
       <div class="alert alert-error" id="adminLoginErr"></div>
-      <div class="form-group"><label>Admin ID</label><input type="email" id="adminEmail" placeholder="admin@university.edu" /></div>
-      <div class="form-group"><label>Security Phrase</label><input type="password" id="adminPass" placeholder="••••••••" /></div>
+      <div class="form-group"><label>Admin ID</label><input type="email" id="adminEmail"
+          placeholder="admin@university.edu" /></div>
+      <div class="form-group"><label>Security Phrase</label><input type="password" id="adminPass"
+          placeholder="••••••••" /></div>
       <button class="btn btn-primary" style="width:100%; margin-top: 1rem;" onclick="adminLogin()">Authenticate</button>
     </div>
   </div>
@@ -1129,12 +1460,15 @@
       <div class="alert alert-success" id="jobSuccess"></div>
       <div class="alert alert-error" id="jobErr"></div>
       <div class="form-row">
-        <div class="form-group"><label>Role Title</label><input type="text" id="jobTitle" placeholder="Frontend Engineer" /></div>
+        <div class="form-group"><label>Role Title</label><input type="text" id="jobTitle"
+            placeholder="Frontend Engineer" /></div>
         <div class="form-group"><label>Organization</label>
-          <input type="text" id="jobCompanyName" placeholder="e.g. Acme Corp" /> 
+          <input type="text" id="jobCompanyName" placeholder="e.g. Acme Corp" />
         </div>
-        <div class="form-group"><label>Location</label><input type="text" id="jobLocation" placeholder="San Francisco, CA" /></div>
-        <div class="form-group"><label>Compensation (LPA)</label><input type="text" id="jobPackage" placeholder="15 LPA" /></div>
+        <div class="form-group"><label>Location</label><input type="text" id="jobLocation"
+            placeholder="San Francisco, CA" /></div>
+        <div class="form-group"><label>Compensation (LPA)</label><input type="text" id="jobPackage"
+            placeholder="15 LPA" /></div>
         <div class="form-group"><label>Contract Type</label>
           <select id="jobType">
             <option>Full-Time</option>
@@ -1143,10 +1477,15 @@
           </select>
         </div>
         <div class="form-group"><label>Closing Date</label><input type="date" id="jobDeadline" /></div>
-        <div class="form-group"><label>Min CGPA Requirement</label><input type="number" id="jobMinCGPA" step="0.1" placeholder="7.0" /></div>
-        <div class="form-group"><label>Max Permitted Backlogs</label><input type="number" id="jobMaxBacklogs" placeholder="0" /></div>
-        <div class="form-group form-full"><label>Eligible Departments <span style="color:var(--muted);font-weight:400">(comma separated, leave blank for all)</span></label><input type="text" id="jobBranches" placeholder="CSE, IT" /></div>
-        <div class="form-group form-full"><label>Role Description</label><textarea id="jobDesc" rows="4" placeholder="Briefly describe the responsibilities and requirements..."></textarea></div>
+        <div class="form-group"><label>Min CGPA Requirement</label><input type="number" id="jobMinCGPA" step="0.1"
+            placeholder="7.0" /></div>
+        <div class="form-group"><label>Max Permitted Backlogs</label><input type="number" id="jobMaxBacklogs"
+            placeholder="0" /></div>
+        <div class="form-group form-full"><label>Eligible Departments <span
+              style="color:var(--muted);font-weight:400">(comma separated, leave blank for all)</span></label><input
+            type="text" id="jobBranches" placeholder="CSE, IT" /></div>
+        <div class="form-group form-full"><label>Role Description</label><textarea id="jobDesc" rows="4"
+            placeholder="Briefly describe the responsibilities and requirements..."></textarea></div>
       </div>
       <button class="btn btn-primary" style="width:100%; margin-top: 1rem;" onclick="addJob()">Publish Opening</button>
     </div>
@@ -1158,24 +1497,28 @@
       <button class="modal-close" onclick="closeModal('addCompanyModal')"><i class="fas fa-times"></i></button>
       <h2 style="margin-bottom: 2rem;">Register Partner</h2>
       <div class="alert alert-success" id="companySuccess"></div>
-      <div class="form-group"><label>Organization Name</label><input type="text" id="compName" placeholder="Acme Corporation" /></div>
-      <div class="form-group"><label>Vertical/Industry</label><input type="text" id="compIndustry" placeholder="Fintech" /></div>
-      <div class="form-group"><label>Corporate Website</label><input type="url" id="compWebsite" placeholder="https://acmecorp.com" /></div>
-      <div class="form-group"><label>Company Bio</label><textarea id="compDesc" rows="4" placeholder="Short description of what the company does..."></textarea></div>
+      <div class="form-group"><label>Organization Name</label><input type="text" id="compName"
+          placeholder="Acme Corporation" /></div>
+      <div class="form-group"><label>Vertical/Industry</label><input type="text" id="compIndustry"
+          placeholder="Fintech" /></div>
+      <div class="form-group"><label>Corporate Website</label><input type="url" id="compWebsite"
+          placeholder="https://acmecorp.com" /></div>
+      <div class="form-group"><label>Company Bio</label><textarea id="compDesc" rows="4"
+          placeholder="Short description of what the company does..."></textarea></div>
       <button class="btn btn-primary" style="width:100%; margin-top: 1rem;" onclick="addCompany()">Save Partner</button>
     </div>
   </div>
 
   <!-- MAIN APP PLATFORM -->
   <div id="app" class="page">
-    
+
     <!-- SIDEBAR NAVIGATION -->
     <div class="sidebar" id="sidebar">
       <div class="sidebar-logo">
         <div class="logo-icon"><i class="fas fa-layer-group"></i></div>
         <div class="logo-text">PlaceTrack</div>
       </div>
-      
+
       <div class="sidebar-user">
         <div class="user-avatar" id="userAvatar">?</div>
         <div class="user-info">
@@ -1183,13 +1526,14 @@
           <div class="user-role" id="userRole">Role</div>
         </div>
       </div>
-      
+
       <div class="sidebar-nav" id="sidebarNav">
         <!-- Rendered via JS -->
       </div>
-      
+
       <div class="sidebar-footer">
-        <button class="btn btn-secondary" style="width:100%; justify-content:flex-start; border:none;" onclick="logout()">
+        <button class="btn btn-secondary" style="width:100%; justify-content:flex-start; border:none;"
+          onclick="logout()">
           <i class="fas fa-sign-out-alt"></i> Sign Out
         </button>
       </div>
@@ -1206,10 +1550,12 @@
             <p class="section-sub">Your placement performance at a glance.</p>
           </div>
         </div>
-        
+
         <div class="stat-cards" id="studentStats"></div>
-        
-        <h3 style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #666; margin-bottom: 1rem;">Recent Activity</h3>
+
+        <h3
+          style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #666; margin-bottom: 1rem;">
+          Recent Activity</h3>
         <div class="table-wrap">
           <table>
             <thead>
@@ -1233,7 +1579,7 @@
             <p class="section-sub">Discover and apply for open roles.</p>
           </div>
         </div>
-        
+
         <div class="filter-row">
           <div class="search-bar">
             <i class="fas fa-search"></i>
@@ -1259,7 +1605,7 @@
             <option value="eligible">My Eligibility</option>
           </select>
         </div>
-        
+
         <div class="cards-grid" id="jobsGrid"></div>
       </div>
 
@@ -1271,7 +1617,7 @@
             <p class="section-sub">Track the status of your applications.</p>
           </div>
         </div>
-        
+
         <div class="table-wrap">
           <table>
             <thead>
@@ -1299,9 +1645,9 @@
             <i class="fas fa-pen"></i> Update Profile
           </button>
         </div>
-        
+
         <div id="profileView"></div>
-        
+
         <div id="profileEdit" style="display:none">
           <div class="card" style="max-width: 800px;">
             <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 2rem; color: #fff;">Modify Details</h3>
@@ -1309,8 +1655,11 @@
               <div class="form-group"><label>Contact Number</label><input type="tel" id="editPhone" /></div>
               <div class="form-group"><label>Current CGPA</label><input type="number" id="editCGPA" step="0.1" /></div>
               <div class="form-group"><label>Active Backlogs</label><input type="number" id="editBacklogs" /></div>
-              <div class="form-group form-full"><label>Technical Arsenal <span style="color:var(--muted);font-weight:400">(Comma separated)</span></label><input type="text" id="editSkills" /></div>
-              <div class="form-group form-full"><label>CV / Resume Document URL</label><input type="url" id="editResume" /></div>
+              <div class="form-group form-full"><label>Technical Arsenal <span
+                    style="color:var(--muted);font-weight:400">(Comma separated)</span></label><input type="text"
+                  id="editSkills" /></div>
+              <div class="form-group form-full"><label>CV / Resume Document URL</label><input type="url"
+                  id="editResume" /></div>
             </div>
             <div class="alert alert-success" id="profileSuccess" style="margin-top: 1rem;"></div>
             <div style="display:flex; gap:1rem; margin-top: 1.5rem;">
@@ -1329,16 +1678,20 @@
             <p class="section-sub">Global metrics and system performance.</p>
           </div>
         </div>
-        
+
         <div class="stat-cards" id="adminStats"></div>
-        
+
         <div class="admin-charts-row" id="adminChartsRow">
           <div class="card">
-            <h3 style="font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:#666; border-bottom:1px solid var(--border); padding-bottom:1rem; margin-bottom:1rem;">Latest Activity Feed</h3>
+            <h3
+              style="font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:#666; border-bottom:1px solid var(--border); padding-bottom:1rem; margin-bottom:1rem;">
+              Latest Activity Feed</h3>
             <div id="adminRecentApps"></div>
           </div>
           <div class="card">
-            <h3 style="font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:#666; border-bottom:1px solid var(--border); padding-bottom:1rem; margin-bottom:1rem;">Pipeline Analytics</h3>
+            <h3
+              style="font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:#666; border-bottom:1px solid var(--border); padding-bottom:1rem; margin-bottom:1rem;">
+              Pipeline Analytics</h3>
             <div id="adminStatusBreakdown"></div>
           </div>
         </div>
@@ -1352,14 +1705,15 @@
             <p class="section-sub">Directory of all registered candidates.</p>
           </div>
         </div>
-        
+
         <div class="filter-row">
           <div class="search-bar" style="flex:none; width:100%; max-width:400px;">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Lookup by name, email, or dept..." oninput="filterStudents()" id="studentSearch" />
+            <input type="text" placeholder="Lookup by name, email, or dept..." oninput="filterStudents()"
+              id="studentSearch" />
           </div>
         </div>
-        
+
         <div class="table-wrap">
           <table>
             <thead>
@@ -1389,7 +1743,7 @@
             <i class="fas fa-plus"></i> Register Company
           </button>
         </div>
-        
+
         <div class="cards-grid" id="companiesGrid"></div>
       </div>
 
@@ -1404,7 +1758,7 @@
             <i class="fas fa-plus"></i> New Posting
           </button>
         </div>
-        
+
         <div class="table-wrap">
           <table>
             <thead>
@@ -1432,7 +1786,7 @@
             <p class="section-sub">Review and evaluate candidate submissions.</p>
           </div>
         </div>
-        
+
         <div class="filter-row">
           <select class="filter-select" id="filterAppStatus" onchange="filterAdminApps()">
             <option value="">All States</option>
@@ -1446,7 +1800,7 @@
             <input type="text" placeholder="Query candidate or role..." oninput="filterAdminApps()" id="appSearch" />
           </div>
         </div>
-        
+
         <div class="table-wrap">
           <table>
             <thead>
@@ -1460,6 +1814,36 @@
               </tr>
             </thead>
             <tbody id="adminAppsTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ADMIN: Specific Applicants -->
+      <div class="content-section" id="sec-adminApplicants">
+        <div class="section-header">
+          <div>
+            <h1 class="section-title" id="adminApplicantsTitle">Applicants</h1>
+            <p class="section-sub" id="adminApplicantsSub">List of candidates who applied.</p>
+          </div>
+          <button class="btn btn-outline" onclick="navigate('adminCompanies')">
+            <i class="fas fa-arrow-left"></i> Back
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Candidate</th>
+                <th>Contact Email</th>
+                <th>Dept</th>
+                <th>CGPA</th>
+                <th>Backlogs</th>
+                <th>Job Title</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="adminApplicantsTable"></tbody>
           </table>
         </div>
       </div>
@@ -1909,11 +2293,11 @@
     async function loadAdminDashboard() {
       const stats = await gCall('getDashboardStats');
       document.getElementById('adminStats').innerHTML = `
-    <div class="stat-card"><div class="stat-card-icon">🎓</div><div class="stat-card-num" style="color:var(--accent)">${stats.totalStudents}</div><div class="stat-card-label">Students</div></div>
-    <div class="stat-card"><div class="stat-card-icon">🏢</div><div class="stat-card-num" style="color:var(--accent2)">${stats.totalCompanies}</div><div class="stat-card-label">Companies</div></div>
-    <div class="stat-card"><div class="stat-card-icon">💼</div><div class="stat-card-num" style="color:var(--warning)">${stats.activeJobs}</div><div class="stat-card-label">Active Jobs</div></div>
-    <div class="stat-card"><div class="stat-card-icon">📋</div><div class="stat-card-num">${stats.totalApplications}</div><div class="stat-card-label">Applications</div></div>
-    <div class="stat-card"><div class="stat-card-icon">🎉</div><div class="stat-card-num" style="color:var(--success)">${stats.placedStudents}</div><div class="stat-card-label">Placed</div></div>`;
+    <div class="stat-card"><div class="stat-card-icon">🎓</div><div class="stat-card-num" style="color:var(--accent)">${stats.totalStudents}</div><div class="stat-card-label">Students</div><button class="btn btn-outline btn-sm" style="margin-top:auto" onclick="navigate('adminStudents')">View List</button></div>
+    <div class="stat-card"><div class="stat-card-icon">🏢</div><div class="stat-card-num" style="color:var(--accent2)">${stats.totalCompanies}</div><div class="stat-card-label">Companies</div><button class="btn btn-outline btn-sm" style="margin-top:auto" onclick="navigate('adminCompanies')">View List</button></div>
+    <div class="stat-card"><div class="stat-card-icon">💼</div><div class="stat-card-num" style="color:var(--warning)">${stats.activeJobs}</div><div class="stat-card-label">Active Jobs</div><button class="btn btn-outline btn-sm" style="margin-top:auto" onclick="navigate('adminJobs')">View List</button></div>
+    <div class="stat-card"><div class="stat-card-icon">📋</div><div class="stat-card-num">${stats.totalApplications}</div><div class="stat-card-label">Applications</div><button class="btn btn-outline btn-sm" style="margin-top:auto" onclick="navigate('adminApps'); document.getElementById('filterAppStatus').value=''; filterAdminApps();">View All</button></div>
+    <div class="stat-card"><div class="stat-card-icon">🎉</div><div class="stat-card-num" style="color:var(--success)">${stats.placedStudents}</div><div class="stat-card-label">Placed</div><button class="btn btn-outline btn-sm" style="margin-top:auto" onclick="navigate('adminApps'); document.getElementById('filterAppStatus').value='Selected'; filterAdminApps();">View Selected</button></div>`;
 
       const apps = await gCall('getAllApplications');
       const recent = apps.slice(-5).reverse();
@@ -1924,8 +2308,8 @@
 
       const statusCount = apps.reduce((acc, a) => { acc[a.Status] = (acc[a.Status] || 0) + 1; return acc; }, {});
       document.getElementById('adminStatusBreakdown').innerHTML = Object.entries(statusCount).map(([s, c]) =>
-        `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">
-    ${statusPill(s)}<strong>${c}</strong></div>`).join('') || '<p style="color:var(--muted)">No data.</p>';
+        `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:center;">
+    ${statusPill(s)}<div style="display:flex;align-items:center;gap:10px;"><strong>${c}</strong><button class="btn btn-xs btn-outline" style="padding:2px 8px;font-size:11px" onclick="navigate('adminApps'); document.getElementById('filterAppStatus').value='${s}'; filterAdminApps();">View Details</button></div></div>`).join('') || '<p style="color:var(--muted)">No data.</p>';
     }
 
     // ---- ADMIN STUDENTS ----
@@ -1958,6 +2342,9 @@
       </div></div>
       <span class="tag tag-purple">${c.Industry || '—'}</span>
       <p style="color:var(--muted);font-size:13px;margin-top:.8rem">${c.Description || 'No description.'}</p>
+      <div style="margin-top:auto; padding-top:1rem; display:flex; justify-content:flex-end;">
+        <button class="btn btn-sm btn-outline" onclick="viewSpecificApplicants('company', '${c.CompanyID}', '${c.Name}')"><i class="fas fa-users"></i> View Applicants</button>
+      </div>
     </div>`).join('') :
         `<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-building"></i><p>No companies added yet.</p></div>`;
     }
@@ -1984,6 +2371,7 @@
         <td>${formatDate(j.Deadline)}</td><td>${statusPill(j.Status)}</td>
         <td><span class="tag tag-cyan">${appCount}</span></td>
         <td style="display:flex;gap:4px">
+          <button class="btn btn-xs btn-outline" onclick="viewSpecificApplicants('job', '${j.JobID}', '${j.Title}')" title="View Applicants"><i class="fas fa-users"></i></button>
           ${j.Status === 'Active' ? `<button class="btn btn-xs btn-warning" style="background:rgba(245,158,11,.15);color:var(--warning)" onclick="closeJob('${j.JobID}')">Close</button>` : `<button class="btn btn-xs btn-success" onclick="openJob('${j.JobID}')">Open</button>`}
           <button class="btn btn-xs btn-danger" onclick="removeJob('${j.JobID}')">Remove</button>
         </td></tr>`;
@@ -2039,6 +2427,45 @@
       await gCall('updateApplicationStatus', appId, status, remarks);
       hideLoader();
       loadAdminApps();
+    }
+
+    async function viewSpecificApplicants(type, id, displayName) {
+      document.getElementById('adminApplicantsTitle').textContent = displayName;
+      document.getElementById('adminApplicantsSub').textContent = `Applicants for ${displayName}`;
+      
+      showLoader();
+      const apps = await gCall('getAllApplications');
+      const students = await gCall('getAllStudents');
+      hideLoader();
+      
+      let filteredApps = [];
+      if (type === 'company') {
+        filteredApps = apps.filter(a => a.CompanyName === displayName);
+        document.querySelector('#sec-adminApplicants .btn-outline').setAttribute('onclick', "navigate('adminCompanies')");
+      } else if (type === 'job') {
+        filteredApps = apps.filter(a => a.JobID === id);
+        document.querySelector('#sec-adminApplicants .btn-outline').setAttribute('onclick', "navigate('adminJobs')");
+      }
+      
+      const tbody = document.getElementById('adminApplicantsTable');
+      if (!filteredApps.length) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem">No applicants found.</td></tr>`;
+      } else {
+        tbody.innerHTML = filteredApps.reverse().map(a => {
+          const s = students.find(st => st.StudentID === a.StudentID) || {};
+          return `<tr>
+            <td><strong>${a.StudentName}</strong><br><small style="color:var(--muted)">${a.StudentID}</small></td>
+            <td>${s.Email || '—'}</td>
+            <td><span class="tag tag-cyan">${s.Branch || '—'}</span></td>
+            <td>${s.CGPA || '—'}</td>
+            <td>${s.Backlogs !== undefined ? s.Backlogs : '—'}</td>
+            <td>${a.JobTitle}</td>
+            <td>${statusPill(a.Status)}</td>
+          </tr>`;
+        }).join('');
+      }
+      
+      navigate('adminApplicants');
     }
 
     // ---- ADD JOB MODAL ----
